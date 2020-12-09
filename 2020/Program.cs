@@ -1,5 +1,7 @@
 ﻿using _2020.Day1;
+using _2020.Day2;
 using System;
+using System.Diagnostics;
 
 namespace _2020
 {
@@ -7,13 +9,45 @@ namespace _2020
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("--- Day 1: Report Repair ---");
-            var input = FindExpenceError.GetInput();
-            var answer = FindExpenceError.GetAnswer(input);
-            Console.WriteLine($"The answer is: {answer}");
+            int day = 2;
+            int part = 0;
+            if (args.Length == 1)
+            {
+                day = int.Parse(args[0]);
+            }
+            else if (args.Length == 2)
+            {
+                day = int.Parse(args[0]);
+                part = int.Parse(args[1]);
+            }
 
-            var answer2 = FindExpenceError.GetAnswer2(input);
-            Console.WriteLine($"The answer2 is: {answer2}");
+            var stopwatch = Stopwatch.StartNew();
+
+            if (day is 0 or 1)
+            {
+                Console.WriteLine("--- Day 1: Report Repair ---");
+                var input = FindExpenceError.GetInput();
+                var answer = FindExpenceError.GetAnswerPart1v1(input);
+                stopwatch.Restart();
+                Console.WriteLine($"The answer is: {answer} was fount in {stopwatch.Elapsed} ms");
+                stopwatch.Restart();
+                var answer2 = FindExpenceError.GetAnswerPart1v2(input);
+                stopwatch.Stop();
+                Console.WriteLine($"The answer is: {answer2} was fount in {stopwatch.Elapsed} ms");
+            }
+
+
+            if (day is 0 or 2)
+            {
+                Console.WriteLine("--- Day 2: Password Philosophy ---");
+                var day2Input = ValidatePasswords.GetInput();
+                stopwatch.Restart();
+                var day2answer = ValidatePasswords.ValidPasswords(day2Input);
+                stopwatch.Stop();
+                Console.WriteLine($"The answer is: {day2answer} was fount in {stopwatch.Elapsed} ms");
+
+             }
+
         }
     }
 }

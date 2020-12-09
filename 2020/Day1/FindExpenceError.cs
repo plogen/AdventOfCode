@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
+
 namespace _2020.Day1
 {
     public static class FindExpenceError
     {
+        
         public static List<int> GetInput()
         {
             List<int> list = new List<int>();
@@ -41,7 +43,28 @@ namespace _2020.Day1
         }
 
 
-        public static int GetAnswer2(List<int> inputs)
+        public static int GetAnswerPart1v1(List<int> input)
+        {
+            int result = 0;
+            for (int x = 0; x < input.Count; x++)
+            {
+                for (int y = 0; y < input.Count; y++)
+                {
+                    if (x == y)
+                        continue;
+
+                    var value = input[x] + input[y];
+
+                    if (value == 2020)
+                    {
+                        result = input[x] * input[y];
+                    }
+                }
+            }
+            return result;
+        }
+
+        public static int GetAnswerPart1v2(List<int> inputs)
         {
             int pair1 = 0;
             int pair2 = 0;
@@ -58,26 +81,24 @@ namespace _2020.Day1
             return pair1 * pair2;
         }
 
-        public static int GetAnswer(List<int> input)
-        {
-            int result = 0;
-            for (int x = 0; x < input.Count; x++)
-            {
-                for (int y = 0; y < input.Count; y++)
-                {
-                    if (x == y)
-                        continue;
+        //public static int GetAnswerPart2v1(List<int> inputs)
+        //{
+        //    int pair1 = 0;
+        //    int pair2 = 0;
+        //    int pair3 = 0;
 
-                    var value = input[x] + input[y];
-
-                    if (value == 2020)
-                    {
-                        result = input[x] * input[y];
-                        Console.WriteLine($"{input[x]} * {input[y]} = {value}");
-                    }
-                }
-            }
-            return result;
-        }
+        //    foreach (var input in inputs)
+        //    {
+        //        int expectedPair = (2020);
+        //        inputs.
+        //        if (inputs.Contains(expectedPair))
+        //        {
+        //            pair1 = input;
+        //            pair2 = expectedPair;
+        //            break;
+        //        }
+        //    }
+        //    return pair1 * pair2;
+        //}
     }
 }
