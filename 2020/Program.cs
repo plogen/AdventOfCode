@@ -1,5 +1,6 @@
 ﻿using _2020.Day1;
 using _2020.Day2;
+using _2020.Day3;
 using System;
 using System.Diagnostics;
 
@@ -9,7 +10,7 @@ namespace _2020
     {
         static void Main(string[] args)
         {
-            int day = 2;
+            int day = 3;
             int part = 0;
             if (args.Length == 1)
             {
@@ -46,7 +47,31 @@ namespace _2020
                 stopwatch.Stop();
                 Console.WriteLine($"The answer is: {day2answer} was fount in {stopwatch.Elapsed} ms");
 
-             }
+            }
+
+
+            if (day is 0 or 3)
+            {
+                Console.WriteLine("--- Day 3: Toboggan Trajectory ---");
+                var day3Input = Trajectory.GetInput();
+                stopwatch.Restart();
+                var day3answer1 = Trajectory.GetCrashes(day3Input, new Trajectory.Slope() { X = 3, Y = 1 });
+                stopwatch.Restart();
+                Console.WriteLine($"The answer is: {day3answer1} was fount in {stopwatch.Elapsed} ms");
+                var day3answer2 = Trajectory.GetMultiSlopeCrashes(day3Input, 
+                    new System.Collections.Generic.List<Trajectory.Slope>()
+                    {
+                        { new Trajectory.Slope() { X = 1, Y = 1 } },
+                        { new Trajectory.Slope() { X = 3, Y = 1 } },
+                        { new Trajectory.Slope() { X = 5, Y = 1 } },
+                        { new Trajectory.Slope() { X = 7, Y = 1 } },
+                        { new Trajectory.Slope() { X = 1, Y = 2 } }
+                    });
+                stopwatch.Stop();
+                Console.WriteLine($"The answer is: {day3answer2} was fount in {stopwatch.Elapsed} ms");
+            }
+
+
 
         }
     }
