@@ -9,7 +9,7 @@ namespace Common
     public static class ReadInputFile
     {
 
-        public static List<int> GetInput(int day)
+        public static List<int> GetInput(int day, string fileName)
         {
             List<int> list = new List<int>();
             int line = 1;
@@ -17,7 +17,7 @@ namespace Common
             try
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
-                var path = Path.Combine(currentDirectory, "Day", day.ToString(), "input.txt");
+                var path = Path.Combine(currentDirectory, "Day", day.ToString(), fileName);
                 using (var sr = new StreamReader(path))
                 {
                     while ((lineData = sr.ReadLine()) != null)

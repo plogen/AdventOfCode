@@ -20,11 +20,17 @@ var stopwatch = Stopwatch.StartNew();
 if (day is 0 or 1)
 {
     Console.WriteLine("--- Day 1: Sonar Sweep ---");
-    var inputPart1 = ReadInputFile.GetInput(1).ToArray();
+    var input = ReadInputFile.GetInput(1, "input.txt").ToArray();
     stopwatch.Restart();
-    var answer = Day1.Part1(inputPart1);
+    var answerPart1 = Day1.Part1(input);
     stopwatch.Stop();
-    PrintResult(1, answer, stopwatch.Elapsed);
+    PrintResult(1, answerPart1, stopwatch.Elapsed);
+
+    stopwatch.Restart();
+    var answerPart2 = Day1.Part2(input);
+    stopwatch.Stop();
+    PrintResult(1, answerPart2, stopwatch.Elapsed);
+
 }
 
 
