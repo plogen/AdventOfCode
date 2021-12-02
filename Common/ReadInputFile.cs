@@ -9,11 +9,10 @@ namespace Common
     public static class ReadInputFile
     {
 
-        public static List<int> GetInput(int day, string fileName)
+        public static List<string> GetInput(int day, string fileName)
         {
-            List<int> list = new List<int>();
-            int line = 1;
-            string lineData;
+            List<string> list = new();
+            string? lineData;
             try
             {
                 var currentDirectory = Directory.GetCurrentDirectory();
@@ -22,20 +21,11 @@ namespace Common
                 {
                     while ((lineData = sr.ReadLine()) != null)
                     {
-                        ushort value;
-                        if (ushort.TryParse(lineData, out value))
-                        {
-                            list.Add(value);
-                        }
-                        else
-                        {
-                            throw new Exception("error in parsing");
-                        }
-                        line++;
+                        list.Add(lineData);
                     }
                 }
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 throw new Exception("error in parsing");
             }
