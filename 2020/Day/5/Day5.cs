@@ -18,8 +18,10 @@ namespace _2020.Day._5
         {
             BoardingPass boardingPass = new() { 
                 Input = input,
-                Row = GetRow(input)
-            };  
+                Row = GetRow(input),
+                Col = GetCol(input)
+            };
+            boardingPass.SeatID = GetSeatID(boardingPass);
 
             return boardingPass;
         }
@@ -31,15 +33,35 @@ namespace _2020.Day._5
             for (int i = 0; i < 6; i++)
             {
                 if (input[i] == 'F')
-                    max = (max - min) / 2;
+                    max = min + ((max - min) / 2);
                 if (input[i] == 'B')
-                    min = ((max - min) / 2) + 1;
+                    min = min + ((max - min) / 2) + 1;
             }
             return min;
         }
+
+        public static int GetCol(string input)
+        {
+            int min = 0;
+            int max = 7;
+            for (int i = 7; i < input.Length; i++)
+            {
+                if (input[i] == 'L')
+                    max = min + ((max - min) / 2);
+                if (input[i] == 'R')
+                    min = min + ((max - min) / 2) + 1;
+            }
+            return min;
+        }
+
+        public static int GetSeatID(BoardingPass boardingPass)
+        {
+            return (boardingPass.Row * 8 + boardingPass.Col);
+        }
+
     }
 
-    public class BoardingPass
+    public record struct BoardingPass
     {
         public string Input { get; set; }
         public int SeatID { get; set; }
