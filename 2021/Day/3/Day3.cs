@@ -12,18 +12,58 @@ namespace aoc2021
     {
         public static int Part1(List<string> input)
         {
-            var list = GetBitArrays(input);
-            var mostCommon = GetMostCommonBit(list);
-            var x = GetIntFromBitArray(mostCommon);
-
             int gammaRate = 0;
             int epsilonRate = 0;
+
+            var list = GetBitArrays(input);
+            var mostCommon = GetMostCommonBit(list);
+            Reverse(mostCommon);
+            gammaRate = GetIntFromBitArray(mostCommon);
+            mostCommon.Not();
+            epsilonRate = GetIntFromBitArray(mostCommon);
+
             return gammaRate * epsilonRate;
         }
 
         public static int Part2(List<string> input)
         {
-            return 0;
+            int oxygenGeneratorRating = 0;
+            int CO2scrubberRating = 0;
+            var list = GetBitArrays(input);
+            var mostCommon = GetMostCommonBit(list);
+
+            for (int i = 0; i < mostCommon.Count; i++)
+            {
+                mostCommon = GetMostCommonBit(list);
+                RemoveUnwantedInputs(list, !mostCommon[i], i);
+
+                if (list.Count == 1)
+                    break;
+            }
+            var lastRemainingOxygenInput = list.First();
+            Reverse(lastRemainingOxygenInput);
+            oxygenGeneratorRating = GetIntFromBitArray(lastRemainingOxygenInput);
+
+
+
+
+            list = GetBitArrays(input);
+            mostCommon = GetMostCommonBit(list);
+
+            for (int i = 0; i < mostCommon.Count; i++)
+            {
+                mostCommon = GetMostCommonBit(list);
+                RemoveUnwantedInputs(list, mostCommon[i], i);
+
+                if (list.Count == 1)
+                    break;
+            }
+            var lastRemainingCO2scrubberRatingInput = list.First();
+            Reverse(lastRemainingCO2scrubberRatingInput);
+            CO2scrubberRating = GetIntFromBitArray(lastRemainingCO2scrubberRatingInput);
+
+
+            return oxygenGeneratorRating * CO2scrubberRating;
         }
 
         public static List<BitArray> GetBitArrays(List<string> input)
@@ -47,7 +87,7 @@ namespace aoc2021
 
         public static BitArray GetMostCommonBit(List<BitArray> input)
         {
-            var list = new int[5];
+            var list = new int[input.First().Length];
             for (int i = 0; i < input.Count; i++)
             {
                 for (int b = 0; b < input[i].Length; b++)
@@ -57,10 +97,10 @@ namespace aoc2021
                 }
             }
 
-            BitArray output = new(5);
+            BitArray output = new(input.First().Length);
             for (int i = 0; i < list.Length; i++)
             {
-                if (list[i] > (input.Count / 2))
+                if (list[i] >= ((float)input.Count / 2))
                     output[i] = true;
                 else
                     output[i] = false;
@@ -71,24 +111,34 @@ namespace aoc2021
 
         public static int GetIntFromBitArray(BitArray input)
         {
-            //int[] array = new int[1];
-            //input.CopyTo(array, 0);
-            //return array[0];
-
             int value = 0;
-            for (int i = input.Count-1; i >= 0; i--)
+            for (int i = 0; i < input.Length; i++)
             {
                 if (input[i])
                     value += Convert.ToInt16(Math.Pow(2, i));
             }
             return value;
+        }
+
+        public static void RemoveUnwantedInputs(List<BitArray> input, bool removeValue, int index)
+        {
+            input.RemoveAll(i => i[index] == removeValue);
+        }
 
 
-            //var result = new int[1];
-            //input.CopyTo(result, 0);
-            //return result[0];
 
 
+        public static void Reverse(BitArray array)
+        {
+            int length = array.Length;
+            int mid = (length / 2);
+
+            for (int i = 0; i < mid; i++)
+            {
+                bool bit = array[i];
+                array[i] = array[length - i - 1];
+                array[length - i - 1] = bit;
+            }
         }
 
 

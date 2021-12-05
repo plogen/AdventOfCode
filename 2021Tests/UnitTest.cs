@@ -96,22 +96,28 @@ namespace aoc2021Tests
         public void ExamplePart1()
         {
             var answer = Day3.Part1(exampleInput);
-
             Assert.AreEqual(198, answer);
+        }
+
+        [Test]
+        public void ExamplePart2()
+        {
+            var answer = Day3.Part2(exampleInput);
+            Assert.AreEqual(230, answer);
         }
 
         [Test]
         public void Part1()
         {
             var answer = Day3.Part1(input);
-            Assert.AreEqual(1690020, answer);
+            Assert.AreEqual(845186, answer);
         }
 
         [Test]
         public void Part2()
         {
             var answer = Day3.Part2(input);
-            Assert.AreEqual(1408487760, answer);
+            Assert.AreEqual(4636702, answer);
         }
     }
 
