@@ -197,7 +197,6 @@ namespace aoc2021Tests
         public void Part2()
         {
             //your answer is too low. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.Please wait one minute before trying again. (You guessed 21080.)
-
             var answer = Day5.Part2(input);
             Assert.AreEqual(-1, answer);
         }
