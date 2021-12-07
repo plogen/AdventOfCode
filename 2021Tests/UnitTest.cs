@@ -1,6 +1,7 @@
 using aoc2021;
 using Common;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -199,6 +200,93 @@ namespace aoc2021Tests
             //your answer is too low. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.Please wait one minute before trying again. (You guessed 21080.)
             var answer = Day5.Part2(input);
             Assert.AreEqual(-1, answer);
+        }
+    }
+
+
+    [TestFixture]
+    public class TestDay6
+    {
+        private readonly int day = 6;
+        private List<int> input = null!;
+        private List<int> exampleInput = null!;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            input = ReadInputFile.GetInput(day, "input.txt").First().Split(',').Select(Int32.Parse).ToList();
+            exampleInput = ReadInputFile.GetInput(day, "exampleInput.txt").First().Split(',').Select(Int32.Parse).ToList();
+        }
+
+        [Test]
+        public void ExamplePart1()
+        {
+            var answer = Day6.Part1(exampleInput, 80);
+            Assert.AreEqual(5934, answer);
+        }
+
+        [Test]
+        public void ExamplePart2()
+        {
+            var answer = Day6.Part2(exampleInput, 256);
+            Assert.AreEqual(26984457539, answer);
+        }
+
+        [Test]
+        public void Part1()
+        {
+            var answer = Day6.Part1(input, 80);
+            Assert.AreEqual(390923, answer);
+        }
+
+        [Test]
+        public void Part2()
+        {
+            var answer = Day6.Part2(input, 256);
+            Assert.AreEqual(1749945484935, answer);
+        }
+    }
+
+    [TestFixture]
+    public class TestDay7
+    {
+        private readonly int day = 7;
+        private List<int> input = null!;
+        private List<int> exampleInput = null!;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            input = ReadInputFile.GetInput(day, "input.txt").First().Split(',').Select(Int32.Parse).ToList();
+            exampleInput = ReadInputFile.GetInput(day, "exampleInput.txt").First().Split(',').Select(Int32.Parse).ToList();
+        }
+
+        [Test]
+        public void ExamplePart1()
+        {
+            var answer = Day7.Part1(exampleInput);
+            Assert.AreEqual(37, answer);
+        }
+
+        [Test]
+        public void ExamplePart2()
+        {
+            var answer = Day7.Part2(exampleInput);
+            Assert.AreEqual(168, answer);
+        }
+
+        [Test]
+        public void Part1()
+        {
+            var answer = Day7.Part1(input);
+            Assert.AreEqual(345035, answer);
+        }
+
+        [Test]
+        public void Part2()
+        {
+            var answer = Day7.Part2(input);
+            Assert.AreEqual(97038163, answer);
         }
     }
 
