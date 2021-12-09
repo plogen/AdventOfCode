@@ -203,7 +203,6 @@ namespace aoc2021Tests
         }
     }
 
-
     [TestFixture]
     public class TestDay6
     {
@@ -287,6 +286,49 @@ namespace aoc2021Tests
         {
             var answer = Day7.Part2(input);
             Assert.AreEqual(97038163, answer);
+        }
+    }
+
+    [TestFixture]
+    public class TestDay8
+    {
+        private readonly int day = 8;
+        private List<string> input = null!;
+        private List<string> exampleInput = null!;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            input = ReadInputFile.GetInput(day, "input.txt").ToList();
+            exampleInput = ReadInputFile.GetInput(day, "exampleInput.txt").ToList();
+        }
+
+        [Test]
+        public void ExamplePart1()
+        {
+            var answer = Day8.Part1(exampleInput);
+            Assert.AreEqual(26, answer);
+        }
+
+        [Test]
+        public void ExamplePart2()
+        {
+            var answer = Day8.Part2(exampleInput);
+            Assert.AreEqual(61229, answer);
+        }
+
+        [Test]
+        public void Part1()
+        {
+            var answer = Day8.Part1(input);
+            Assert.AreEqual(493, answer);
+        }
+
+        [Test]
+        public void Part2()
+        {
+            var answer = Day8.Part2(input);
+            Assert.AreEqual(-1, answer);
         }
     }
 
