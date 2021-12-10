@@ -332,4 +332,58 @@ namespace aoc2021Tests
         }
     }
 
+    [TestFixture]
+    public class TestDay9
+    {
+        private readonly int day = 9;
+        private int[][] input = null!;
+        private int[][] exampleInput = null!;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+
+            var inputRows = ReadInputFile.GetInput(day, "input.txt");
+            input = new int[inputRows.Count][];
+            for (int i = 0; i < input.Length; i++)
+            {
+                input[i] = inputRows[i].Trim().Select(x => x - '0').ToArray();
+            }
+
+            var exampleInputRows = ReadInputFile.GetInput(day, "exampleInput.txt");
+            exampleInput = new int[exampleInputRows.Count][];
+            for (int i = 0; i < exampleInput.Length; i++)
+            {
+                exampleInput[i] = exampleInputRows[i].Trim().Select(x => x - '0').ToArray();
+            }
+        }
+
+        [Test]
+        public void ExamplePart1()
+        {
+            var answer = Day9.Part1(exampleInput);
+            Assert.AreEqual(15, answer);
+        }
+
+        [Test]
+        public void ExamplePart2()
+        {
+            var answer = Day9.Part2(exampleInput);
+            Assert.AreEqual(1134, answer);
+        }
+
+        [Test]
+        public void Part1()
+        {
+            var answer = Day9.Part1(input);
+            Assert.AreEqual(458, answer);
+        }
+
+        [Test]
+        public void Part2()
+        {
+            var answer = Day9.Part2(input);
+            Assert.AreEqual(-1, answer);
+        }
+    }
 }
