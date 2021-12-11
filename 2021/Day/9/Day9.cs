@@ -80,15 +80,14 @@ namespace aoc2021
             {
                 var newList = TraverseOutwards(input, lastList);
                 newList.RemoveAll(p => p.Value == 9);
-                
                 newList.RemoveAll(p => finalList.Any(f => f.X == p.X && f.Y == p.Y));
-                newList.Select(m => new { m.X, m.Y })
-                        .Distinct()
-                        .ToList();
-                if (newList.Count > 0)
+                var v = newList.GroupBy(g => new { g.X, g.Y })
+                         .Select(g => g.First())
+                         .ToList();
+                if (v.Count > 0)
                 {
-                    finalList.AddRange(newList);
-                    lastList = newList;
+                    finalList.AddRange(v);
+                    lastList = v;
                 }
                 else
                     done = true;

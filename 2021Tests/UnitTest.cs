@@ -383,7 +383,7 @@ namespace aoc2021Tests
         public void Part2()
         {
             var answer = Day9.Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(1391940, answer);
         }
     }
 }
