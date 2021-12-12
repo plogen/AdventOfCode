@@ -386,4 +386,59 @@ namespace aoc2021Tests
             Assert.AreEqual(1391940, answer);
         }
     }
+
+    [TestFixture]
+    public class TestDay10
+    {
+        private readonly int day = 10;
+        private List<string> input = null!;
+        private List<string> exampleInput = null!;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            input = ReadInputFile.GetInput(day, "input.txt").ToList();
+            exampleInput = ReadInputFile.GetInput(day, "exampleInput.txt").ToList();
+        }
+
+        [Test]
+        public void ExamplePart1()
+        {
+            var answer = Day10.Part1(exampleInput);
+            Assert.AreEqual(26397, answer);
+        }
+
+        [TestCase("{([(<{}[<>[]}>{[]{[(<()>", '}')]
+        [TestCase("[[<[([]))<([[{}[[()]]]", ')')]
+        [TestCase("[{[{({}]{}}([{[{{{}}([]", ']')]
+        [TestCase("[<(<(<(<{}))><([]([]()", ')')]
+        [TestCase("<{([([[(<>()){}]>(<<{{", '>')]
+        public void ExamplePart1_2(string input, char expected)
+        {
+            var answer = Day10.PushPop(input);
+            Assert.AreEqual(expected, answer);
+        }
+
+
+        [Test]
+        public void ExamplePart2()
+        {
+            var answer = Day10.Part2(exampleInput);
+            Assert.AreEqual(288957, answer);
+        }
+
+        [Test]
+        public void Part1()
+        {
+            var answer = Day10.Part1(input);
+            Assert.AreEqual(442131, answer);
+        }
+
+        [Test]
+        public void Part2()
+        {
+            var answer = Day10.Part2(input);
+            Assert.AreEqual(-1, answer);
+        }
+    }
 }
