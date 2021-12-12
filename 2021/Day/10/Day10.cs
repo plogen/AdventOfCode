@@ -24,19 +24,21 @@ namespace aoc2021
         }
 
 
-        public static int Part2(List<string> input)
+        public static long Part2(List<string> input)
         {
 
-            int result = 0;
+            List<long> results = new List<long>();
             foreach (var row in input)
             {
-                if (PushPop(row) == '0')
-                { 
-                    
-                }
+                long score = 0;
+                var success = CompleteIncomplete(row, out score);
+                if (success)
+                    results.Add(score);
             }
 
-            return 0;
+            results.Sort();
+
+            return results[results.Count/2];
         }
 
 
@@ -67,8 +69,10 @@ namespace aoc2021
         }
 
 
-        public static char CompleteIncomplete(string row)
+        public static bool CompleteIncomplete(string row, out long score)
         {
+            score = 0;
+
             Stack<char> stack = new Stack<char>();
             foreach (var c in row)
             {
@@ -77,19 +81,70 @@ namespace aoc2021
                     stack.Push(c);
                     continue;
                 }
-
                 var pop = stack.Pop();
                 if (c is ')' && pop != '(')
-                    return c;
+                {
+                    return false;
+                    break;
+                }
                 if (c is ']' && pop != '[')
-                    return c;
+                {
+                    return false;
+                    break;
+                }
                 if (c is '}' && pop != '{')
-                    return c;
+                {
+                    return false;
+                    break;
+                }
                 if (c is '>' && pop != '<')
-                    return c;
-
+                {
+                    return false;
+                    break;
+                }
             }
-            return '0';
+                
+
+            List<char> completed = new List<char>();
+            int stackCount = stack.Count;
+            for (int i = 0; i < stackCount; i++)
+            {
+                var pop = stack.Pop();
+                if (pop is '(')
+                    completed.Add(')');
+                if (pop is '[')
+                    completed.Add(']');
+                if (pop is '{')
+                    completed.Add('}');
+                if (pop is '<')
+                    completed.Add('>');
+            }
+
+            foreach (var c in completed)
+            {
+                score = score * 5;
+                score += GetAutocompletePoint(c);
+            }
+            return true;
+
+        }
+
+        private static int GetAutocompletePoint(char c)
+        {
+            switch (c)
+            {
+                case ')':
+                    return 1;
+                case ']':
+                    return 2;
+                case '}':
+                    return 3;
+                case '>':
+                    return 4;
+                default:
+                    return 0;
+                    break;
+            }
         }
 
 
