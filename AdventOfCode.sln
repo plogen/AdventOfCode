@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aoc2021.Tests", "2021Tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "Common.Tests\Common.Tests.csproj", "{448C6CB3-F055-4513-8B58-EA36FEEABF45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aoc2020.Tests", "aoc2020.Tests\aoc2020.Tests.csproj", "{F06F98C6-C10C-467D-8286-B5026107EE00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aoc2020.Tests", "aoc2020.Tests\aoc2020.Tests.csproj", "{F06F98C6-C10C-467D-8286-B5026107EE00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

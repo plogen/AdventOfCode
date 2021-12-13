@@ -2,8 +2,9 @@
 using aoc2021;
 using Common;
 using System.Diagnostics;
+using static aoc2021.Day11;
 
-int day = 0;
+int day = 11;
 int part = 0;
 if (args.Length == 1)
 {
@@ -32,6 +33,54 @@ if (day is 0 or 1)
     PrintResult(1, answerPart2, stopwatch.Elapsed);
 
 }
+
+
+if (day is 0 or 11)
+{
+    Console.WriteLine("--- Day 11: Dumbo Octopus ---");
+
+    int[][] input = null!;
+    int[][] exampleInput = null!;
+
+    var inputRows = ReadInputFile.GetInput(day, "input.txt");
+    input = ReadInputFile.GetInputAsMultiArrayInt(inputRows);
+
+    var exampleInputRows = ReadInputFile.GetInput(day, "exampleInput.txt");
+    exampleInput = ReadInputFile.GetInputAsMultiArrayInt(exampleInputRows);
+
+
+    var opctopuses = Day11.GetOctupuses(exampleInput);
+    PrintOctupuses(opctopuses);
+    for (int i = 1; i <= 10; i++)
+    {
+        var result = OneFlashRound(opctopuses);
+        Console.WriteLine($"After step {i}:");
+        PrintOctupuses(opctopuses);
+    }
+
+}
+
+
+
+
+
+static void PrintOctupuses(List<Octopus> octupuses)
+{
+    foreach (var octupus in octupuses)
+    {
+        if(octupus.EnergyLevel is 0)
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+        Console.Write(octupus.EnergyLevel);
+
+        if (octupus.EnergyLevel is 0)
+            Console.ResetColor();
+
+        if (octupus.X == 9)
+            Console.WriteLine();
+    }
+}
+
 
 
 static void PrintResult(int part, object answer, TimeSpan executionTime)
