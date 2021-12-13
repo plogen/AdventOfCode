@@ -344,18 +344,10 @@ namespace aoc2021Tests
         {
 
             var inputRows = ReadInputFile.GetInput(day, "input.txt");
-            input = new int[inputRows.Count][];
-            for (int i = 0; i < input.Length; i++)
-            {
-                input[i] = inputRows[i].Trim().Select(x => x - '0').ToArray();
-            }
+            input = ReadInputFile.GetInputAsMultiArrayInt(inputRows);
 
             var exampleInputRows = ReadInputFile.GetInput(day, "exampleInput.txt");
-            exampleInput = new int[exampleInputRows.Count][];
-            for (int i = 0; i < exampleInput.Length; i++)
-            {
-                exampleInput[i] = exampleInputRows[i].Trim().Select(x => x - '0').ToArray();
-            }
+            exampleInput = ReadInputFile.GetInputAsMultiArrayInt(exampleInputRows);
         }
 
         [Test]
@@ -453,18 +445,10 @@ namespace aoc2021Tests
         public void Setup()
         {
             var inputRows = ReadInputFile.GetInput(day, "input.txt");
-            input = new int[inputRows.Count][];
-            for (int i = 0; i < input.Length; i++)
-            {
-                input[i] = inputRows[i].Trim().Select(x => x - '0').ToArray();
-            }
+            input = ReadInputFile.GetInputAsMultiArrayInt(inputRows);
 
             var exampleInputRows = ReadInputFile.GetInput(day, "exampleInput.txt");
-            exampleInput = new int[exampleInputRows.Count][];
-            for (int i = 0; i < exampleInput.Length; i++)
-            {
-                exampleInput[i] = exampleInputRows[i].Trim().Select(x => x - '0').ToArray();
-            }
+            exampleInput = ReadInputFile.GetInputAsMultiArrayInt(exampleInputRows);
         }
 
         [Test]

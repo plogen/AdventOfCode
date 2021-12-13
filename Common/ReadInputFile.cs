@@ -38,13 +38,12 @@ namespace Common
         {
             int[][] output = null!;
             output = new int[input.Count][];
-            for (int i = 0; i < input[0].Length; i++)
+            for (int i = 0; i < output.Length; i++)
             {
                 output[i] = input[i].Trim().Select(x => x - '0').ToArray();
             }
             return output;
         }
-
 
 
     }
