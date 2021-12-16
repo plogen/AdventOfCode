@@ -63,6 +63,19 @@ if (day is 0 or 11)
 
 
 
+if (day is 0 or 13)
+{
+    Console.WriteLine("--- Day 13: Transparent Origami ---");
+    List<string> input = ReadInputFile.GetInput(day, "input.txt").ToList();
+    List<string> exampleInput = ReadInputFile.GetInput(day, "exampleInput.txt").ToList();
+    var paper = Day13.Part2(input);
+    PrintTransparentOrigami(paper);
+}
+
+
+
+
+
 
 static void PrintOctupuses(List<Octopus> octupuses)
 {
@@ -80,6 +93,28 @@ static void PrintOctupuses(List<Octopus> octupuses)
             Console.WriteLine();
     }
 }
+
+
+static void PrintTransparentOrigami(Paper paper)
+{
+    var xSize = paper.Dots.GetLength(0);
+    var ySize = paper.Dots.GetLength(1);
+
+
+    for (int y = 0; y < ySize; y++)
+    {
+        for (int x = 0; x < xSize; x++)
+        {
+            Console.SetCursorPosition(x, y);
+            if (paper.Dots[x, y] == 1)
+                Console.Write('#');
+            else
+                Console.Write(' ');
+        }
+    }
+}
+
+
 
 
 

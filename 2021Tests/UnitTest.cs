@@ -517,4 +517,42 @@ namespace aoc2021Tests
             Assert.AreEqual(-1, answer);
         }
     }
+
+    [TestFixture]
+    public class TestDay13
+    {
+        private readonly int day = 13;
+        private List<string> input = null!;
+        private List<string> exampleInput = null!;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            input = ReadInputFile.GetInput(day, "input.txt").ToList();
+            exampleInput = ReadInputFile.GetInput(day, "exampleInput.txt").ToList();
+        }
+
+        [Test]
+        public void ExamplePart1()
+        {
+            var answer = Day13.Part1(exampleInput);
+            Assert.AreEqual(17, answer);
+        }
+
+
+        [Test]
+        public void Part1()
+        {
+            var answer = Day13.Part1(input);
+            Assert.AreEqual(704, answer);
+        }
+
+        [Test]
+        public void Part2()
+        {
+            var answer = Day13.Part2(input);
+            string manualReadFromConsoleApp = "HGAJBEHC";
+            Assert.AreEqual("HGAJBEHC", manualReadFromConsoleApp);
+        }
+    }
 }
