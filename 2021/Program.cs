@@ -3,8 +3,9 @@ using aoc2021;
 using Common;
 using System.Diagnostics;
 using static aoc2021.Day11;
+using static aoc2021.Day13;
 
-int day = 11;
+int day = 13;
 int part = 0;
 if (args.Length == 1)
 {
@@ -53,9 +54,12 @@ if (day is 0 or 11)
     PrintOctupuses(opctopuses);
     for (int i = 1; i <= 10; i++)
     {
+        Console.Clear();
         var result = OneFlashRound(opctopuses);
         Console.WriteLine($"After step {i}:");
         PrintOctupuses(opctopuses);
+        Thread.Sleep(1000);
+
     }
 
 }
@@ -81,7 +85,7 @@ static void PrintOctupuses(List<Octopus> octupuses)
 {
     foreach (var octupus in octupuses)
     {
-        if(octupus.EnergyLevel is 0)
+        if (octupus.EnergyLevel is 0)
             Console.ForegroundColor = ConsoleColor.Yellow;
 
         Console.Write(octupus.EnergyLevel);
