@@ -12,7 +12,7 @@ namespace aoc2015.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-            input = ReadInputFile.GetInput(day, "input.txt").First();
+            input = ReadInputFile.GetInputDayPadding(day, "input.txt").First();
         }
 
         [Test]
