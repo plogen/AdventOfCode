@@ -11,13 +11,37 @@ namespace aoc2015
     {
         public static int Part1(string input)
         {
-            return 0;
+            int floor = 0;
+            foreach (var c in input)
+            {
+                if(c == '(')
+                    floor++;
+                else if(c == ')')
+                    floor--;
+            }
+            return floor;
         }
 
         public static int Part2(string input)
         {
+            int floor = 0;
+            int index = 1;
+            foreach (var c in input)
+            {
+                if (c == '(')
+                    floor++;
+                else if (c == ')')
+                    floor--;
+
+                if (floor == -1)
+                    return index;
+
+                index++;
+            }
             return 0;
         }
+
+
 
     }
 }

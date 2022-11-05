@@ -35,14 +35,24 @@ namespace aoc2015.Tests
         public void Part1()
         {
             var answer = Day01.Part1(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(280, answer);
+        }
+
+
+        [Test]
+        [TestCase(")", 1)]
+        [TestCase("()())", 5)]
+        public void ExamplePart2(string input, int expected)
+        {
+            var answer = Day01.Part2(input);
+            Assert.AreEqual(expected, answer);
         }
 
         [Test]
         public void Part2()
         {
             var answer = Day01.Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(1797, answer);
         }
     }
 
