@@ -25,4 +25,8 @@
     <Folder Include="Day\4\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\aoc2015\aoc2015.csproj" />
+  </ItemGroup>
+
 </Project>
