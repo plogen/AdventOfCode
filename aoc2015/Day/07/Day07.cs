@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -23,212 +24,247 @@ namespace aoc2015
         public static Regex LSHIFT = new Regex(@"([a-zA-Z]+)\s(?:LSHIFT)\s(\d+) -> ([a-zA-Z]+)");
         public static Regex RSHIFT = new Regex(@"([a-zA-Z]+)\s(?:RSHIFT)\s(\d+) -> ([a-zA-Z]+)");
         public static Regex NOT = new Regex(@"NOT\s([a-zA-Z]+) -> ([a-zA-Z]+)");
-        
 
-        public static string? ConnectWires(string input, List<Wire> wires)
+
+        public static List<Wire> GetInitialWireList(List<string> inputs)
         {
-            MatchCollection match;
-
-            match = SIGNALValue.Matches(input);
-            if (match.Count > 0)
+            var wires = new List<Wire>();
+            foreach (var input in inputs)
             {
-                var value = UInt16.Parse(match[0].Groups[1].Value);
-                var destination = match[0].Groups[2].Value;
-                var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
-                if (destinationWire is null)
+                MatchCollection match;
+                match = SIGNALValue.Matches(input);
+                if (match.Count > 0)
                 {
-                    wires.Add(new Wire() { Name = destination, Value = value });
+                    var value = UInt16.Parse(match[0].Groups[1].Value);
+                    var destination = match[0].Groups[2].Value;
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = match[0].Groups[1].Value, ConnectionType = ConnectionType.SIGNALValue, IsDone = true });
+                    continue;
                 }
-                else
+
+                match = SIGNAL.Matches(input);
+                if (match.Count > 0)
                 {
-                    destinationWire.Value = value;
+                    var source = match[0].Groups[1].Value;
+                    var destination = match[0].Groups[2].Value;
+                    var sourceWire = wires.FirstOrDefault(w => w.Name == source);
+
+                    if (sourceWire is null || sourceWire.IsDone == false)
+                    {
+                        wires.Add(new Wire() { Name = destination, Depend1 = source, ConnectionType = ConnectionType.SIGNAL });
+                        continue;
+                    }
+
+                    var value = sourceWire.Value;
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = source, ConnectionType = ConnectionType.SIGNAL, IsDone = true });
+                    continue;
                 }
-                return null;
+
+
+                match = AND.Matches(input);
+                if (match.Count > 0)
+                {
+                    var source1 = match[0].Groups[1].Value;
+                    var source2 = match[0].Groups[2].Value;
+                    var destination = match[0].Groups[3].Value;
+
+                    var sourceWire1 = wires.FirstOrDefault(w => w.Name == source1);
+                    var sourceWire2 = wires.FirstOrDefault(w => w.Name == source2);
+                    var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
+
+                    if (sourceWire1 is null || sourceWire1.IsDone == false || sourceWire2 is null || sourceWire2.IsDone == false)
+                    {
+                        wires.Add(new Wire() { Name = destination, Depend1 = source1, Depend2 = source2, ConnectionType = ConnectionType.AND });
+                        continue;
+                    }
+
+                    UInt16 value = (UInt16)(sourceWire1.Value & sourceWire2.Value);
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = source1, Depend2 = source2, ConnectionType = ConnectionType.AND, IsDone = true });
+                    continue;
+                }
+
+                match = OR.Matches(input);
+                if (match.Count > 0)
+                {
+                    var source1 = match[0].Groups[1].Value;
+                    var source2 = match[0].Groups[2].Value;
+                    var destination = match[0].Groups[3].Value;
+
+                    var sourceWire1 = wires.FirstOrDefault(w => w.Name == source1);
+                    var sourceWire2 = wires.FirstOrDefault(w => w.Name == source2);
+
+                    if (sourceWire1 is null || sourceWire1.IsDone == false || sourceWire2 is null || sourceWire2.IsDone == false)
+                    {
+                        wires.Add(new Wire() { Name = destination, Depend1 = source1, Depend2 = source2, ConnectionType = ConnectionType.OR });
+                        continue;
+                    }
+
+                    UInt16 value = (UInt16)(sourceWire1.Value | sourceWire2.Value);
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = source1, Depend2 = source2, ConnectionType = ConnectionType.OR, IsDone = true });
+                    continue;
+                }
+
+                match = LSHIFT.Matches(input);
+                if (match.Count > 0)
+                {
+                    var source = match[0].Groups[1].Value;
+                    var valueToShift = UInt16.Parse(match[0].Groups[2].Value);
+                    var destination = match[0].Groups[3].Value;
+
+                    var sourceWire = wires.FirstOrDefault(w => w.Name == source);
+
+                    if (sourceWire is null || sourceWire.IsDone == false)
+                    {
+                        wires.Add(new Wire() { Name = destination, Depend1 = source, Input = valueToShift, ConnectionType = ConnectionType.LSHIFT });
+                        continue;
+                    }
+
+                    var value = (ushort)(sourceWire.Value << valueToShift);
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = source, Input = valueToShift, ConnectionType = ConnectionType.LSHIFT, IsDone = true });
+                    continue;
+                }
+
+
+                match = RSHIFT.Matches(input);
+                if (match.Count > 0)
+                {
+                    var source = match[0].Groups[1].Value;
+                    var valueToShift = UInt16.Parse(match[0].Groups[2].Value);
+                    var destination = match[0].Groups[3].Value;
+
+                    var sourceWire = wires.FirstOrDefault(w => w.Name == source);
+
+                    if (sourceWire is null || sourceWire.IsDone == false)
+                    {
+                        wires.Add(new Wire() { Name = destination, Depend1 = source, Input = valueToShift, ConnectionType = ConnectionType.RSHIFT });
+                        continue;
+                    }
+                    var value = (ushort)(sourceWire.Value >> valueToShift);
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = source, Input = valueToShift, ConnectionType = ConnectionType.RSHIFT, IsDone = true });
+                    continue;
+                }
+
+
+                match = NOT.Matches(input);
+                if (match.Count > 0)
+                {
+                    var source = match[0].Groups[1].Value;
+                    var destination = match[0].Groups[2].Value;
+                    var sourceWire = wires.FirstOrDefault(w => w.Name == source);
+
+                    if (sourceWire is null || sourceWire.IsDone == false)
+                    {
+                        wires.Add(new Wire() { Name = destination, Depend1 = source, ConnectionType = ConnectionType.NOT });
+                        continue;
+                    }
+
+                    var value = (ushort)~sourceWire.Value;
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = source, ConnectionType = ConnectionType.NOT, IsDone = true });
+                    continue;
+                }
+
+            }
+            return wires;
+
+        }
+
+
+        public static void ConnectWires(List<Wire> wires)
+        {
+            foreach (var wire in wires)
+            {
+                if (wire.IsDone)
+                    continue;
+
+                try
+                {
+                    if (wire.Depend1 is null && wire.Depend2 is null)
+                    {
+                        UpdateWireValue(wires, wire);
+                    }
+
+
+                    if (wires.First(w => w.Name == wire.Depend1).IsDone && wire.Depend2 is null)
+                    {
+                        UpdateWireValue(wires, wire);
+                    }
+
+                    if (wires.First(w => w.Name == wire.Depend1).IsDone &&
+                        (wire.Depend2 != null && wires.First(w => w.Name == wire.Depend2).IsDone))
+                    {
+                        UpdateWireValue(wires, wire);
+                    }
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+        }
+
+        public static void SortWiresByDependency(List<Wire> wires)
+        {
+            wires.Shuffle();
+        }
+
+
+        public static void UpdateWireValue(List<Wire> wires, Wire wire)
+        {
+            var sourceWire1 = wires.FirstOrDefault(w => w.Name == wire.Depend1);
+            var sourceWire2 = wires.FirstOrDefault(w => w.Name == wire.Depend2);
+
+            switch (wire.ConnectionType)
+            {
+                case ConnectionType.SIGNALValue:
+                    wire.Value = wire.Input;
+                    wire.IsDone = true;
+                    break;
+                case ConnectionType.SIGNAL:
+                    wire.Value = sourceWire1.Value;
+                    wire.IsDone = true;
+                    break;
+                case ConnectionType.AND:
+                    wire.Value = (UInt16)(sourceWire1.Value & sourceWire2.Value);
+                    wire.IsDone = true;
+                    break;
+                case ConnectionType.OR:
+                    wire.Value = (UInt16)(sourceWire1.Value | sourceWire2.Value);
+                    wire.IsDone = true;
+                    break;
+                case ConnectionType.LSHIFT:
+                    wire.Value = (ushort)(sourceWire1.Value << wire.Input);
+                    wire.IsDone = true;
+                    break;
+                case ConnectionType.RSHIFT:
+                    wire.Value = (ushort)(sourceWire1.Value >> wire.Input);
+                    wire.IsDone = true;
+                    break;
+                case ConnectionType.NOT:
+                    wire.Value = (ushort)~sourceWire1.Value;
+                    wire.IsDone = true;
+                    break;
+                default:
+                    break;
             }
 
-            match = SIGNAL.Matches(input);
-            if (match.Count > 0)
-            {
-                var source = match[0].Groups[1].Value;
-                var destination = match[0].Groups[2].Value;
-
-                var sourceWire = wires.FirstOrDefault(w => w.Name == source);
-                var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
-
-                if(sourceWire is null)
-                    return input;
-
-                var value = sourceWire.Value;
-
-                if (destinationWire is null)
-                {
-                    wires.Add(new Wire() { Name = destination, Value = value });
-                }
-                else
-                {
-                    destinationWire.Value = value;
-                }
-                return null;
-            }
-
-
-            match = AND.Matches(input);
-            if (match.Count > 0)
-            {
-                var source1 = match[0].Groups[1].Value;
-                var source2 = match[0].Groups[2].Value;
-                var destination = match[0].Groups[3].Value;
-
-                var sourceWire1 = wires.FirstOrDefault(w => w.Name == source1);
-                var sourceWire2 = wires.FirstOrDefault(w => w.Name == source2);
-                var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
-
-                if(sourceWire1 is null || sourceWire2 is null)
-                    return input;
-
-                UInt16 value = (UInt16)(sourceWire1.Value & sourceWire2.Value);
-
-                if (destinationWire is null)
-                {
-                    wires.Add(new Wire() { Name = destination, Value = value });
-                }
-                else
-                {
-                    destinationWire.Value = value;
-                }
-                return null;
-            }
-
-            match = OR.Matches(input);
-            if (match.Count > 0)
-            {
-                var source1 = match[0].Groups[1].Value;
-                var source2 = match[0].Groups[2].Value;
-                var destination = match[0].Groups[3].Value;
-
-                var sourceWire1 = wires.FirstOrDefault(w => w.Name == source1);
-                var sourceWire2 = wires.FirstOrDefault(w => w.Name == source2);
-                var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
-
-                if (sourceWire1 is null || sourceWire2 is null)
-                    return input;
-
-                UInt16 value = (UInt16)(sourceWire1.Value | sourceWire2.Value);
-
-                if (destinationWire is null)
-                {
-                    wires.Add(new Wire() { Name = destination, Value = value });
-                }
-                else
-                {
-                    destinationWire.Value = value;
-                }
-                return null;
-            }
-
-            match = LSHIFT.Matches(input);
-            if (match.Count > 0)
-            {
-                var source = match[0].Groups[1].Value;
-                var valueToShift = UInt16.Parse(match[0].Groups[2].Value);
-                var destination = match[0].Groups[3].Value;
-
-                var sourceWire = wires.FirstOrDefault(w => w.Name == source);
-                var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
-
-                if (sourceWire is null)
-                    return input;
-
-                var value = (ushort)(sourceWire.Value << valueToShift);
-
-                if (destinationWire is null)
-                {
-                    wires.Add(new Wire() { Name = destination, Value = value });
-                }
-                else
-                {
-                    destinationWire.Value = value;
-                }
-                return null;
-            }
-
-
-            match = RSHIFT.Matches(input);
-            if (match.Count > 0)
-            {
-                var source = match[0].Groups[1].Value;
-                var valueToShift = UInt16.Parse(match[0].Groups[2].Value);
-                var destination = match[0].Groups[3].Value;
-
-                var sourceWire = wires.FirstOrDefault(w => w.Name == source);
-                var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
-
-                if (sourceWire is null)
-                    return input;
-
-                var value = (ushort)(sourceWire.Value >> valueToShift);
-
-                if (destinationWire is null)
-                {
-                    wires.Add(new Wire() { Name = destination, Value = value });
-                }
-                else
-                {
-                    destinationWire.Value = value;
-                }
-                return null;
-            }
-
-
-            match = NOT.Matches(input);
-            if (match.Count > 0)
-            {
-                var source = match[0].Groups[1].Value;
-                var destination = match[0].Groups[2].Value;
-
-                var sourceWire = wires.FirstOrDefault(w => w.Name == source);
-                var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
-
-                if (sourceWire is null)
-                    return input;
-
-                var value = (ushort)~sourceWire.Value;
-
-                if (destinationWire is null)
-                {
-                    wires.Add(new Wire() { Name = destination, Value = value });
-                }
-                else
-                {
-                    destinationWire.Value = value;
-                }
-                return null;
-            }
-
-            return null;
         }
 
         public static int Part1(List<string> inputs)
         {
-            var wires = new List<Wire>();
-            var retries = new Queue<string>();
-            foreach (var input in inputs)
-            {
-                var result = ConnectWires(input, wires);
-                if(result != null)
-                {
-                    retries.Enqueue(result);
-                }
-            }
+            var wires = GetInitialWireList(inputs);
 
-            while (retries.Count > 0)
+            //foreach (var input in inputs)
+            //{
+            //    ConnectWires(input, wires);
+            //}
+
+
+
+            while (wires.Any(w => w.IsDone == false))
             {
-                var retry = retries.Dequeue();
-                var result = ConnectWires(retry, wires);
-                if (result != null)
-                {
-                    retries.Enqueue(result);
-                }
+                SortWiresByDependency(wires);
+                ConnectWires(wires);
+                var left = wires.Count(w => w.IsDone == false);
+                Console.WriteLine($"Left: {left}");
             }
 
             return -1;
@@ -245,9 +281,40 @@ namespace aoc2015
             public bool IsDone { get; set; }
             public string? Depend1 { get; set; }
             public string? Depend2 { get; set; }
+
+            public UInt16 Input { get; set; }
+
+            public ConnectionType ConnectionType { get; set; }
             public UInt16 Value { get; set; }
         }
 
+        public enum ConnectionType
+        {
+            SIGNALValue,
+            SIGNAL,
+            AND,
+            OR,
+            LSHIFT,
+            RSHIFT,
+            NOT
+        }
+
+
+
+        private static Random rng = new Random();
+
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
 
 
 
