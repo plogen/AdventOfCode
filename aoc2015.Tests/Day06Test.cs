@@ -47,7 +47,7 @@ namespace aoc2015.Tests
         public void Part2()
         {
             var answer = Day06.Part2(input);
-            Assert.AreEqual(0, answer);
+            Assert.AreEqual(14110788, answer);
         }
     }
 
