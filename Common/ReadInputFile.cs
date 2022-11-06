@@ -33,6 +33,27 @@ namespace Common
             return list;
         }
 
+
+        public static string GetInputAsStringDayPadding(int day, string fileName)
+        {
+            string lineData;
+            try
+            {
+                var currentDirectory = Directory.GetCurrentDirectory();
+                var path = Path.Combine(currentDirectory, "Day", day.ToString().PadLeft(2, '0'), fileName);
+                using (var sr = new StreamReader(path))
+                {
+                    lineData = sr.ReadToEnd();
+                }
+            }
+            catch (IOException)
+            {
+                throw new Exception("error in parsing");
+            }
+
+            return lineData;
+        }
+
         public static List<string> GetInputDayPadding(int day, string fileName)
         {
             List<string> list = new();
