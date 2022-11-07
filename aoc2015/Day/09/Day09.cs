@@ -1,5 +1,4 @@
-﻿using aoc2015.Day._09;
-using Common;
+﻿using Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
