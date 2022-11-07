@@ -20,6 +20,7 @@ namespace aoc2015
         public static Regex SIGNALValue = new Regex(@"^(\d+) -> ([a-zA-Z]+)$");
         public static Regex SIGNAL = new Regex(@"^([a-zA-Z]+) -> ([a-zA-Z]+)$");
         public static Regex AND = new Regex(@"([a-zA-Z]+)\sAND\s([a-zA-Z]+) -> ([a-zA-Z]+)");
+        public static Regex ANDValue = new Regex(@"(\d+)\sAND\s([a-zA-Z]+) -> ([a-zA-Z]+)");
         public static Regex OR = new Regex(@"([a-zA-Z]+)\sOR\s([a-zA-Z]+) -> ([a-zA-Z]+)");
         public static Regex LSHIFT = new Regex(@"([a-zA-Z]+)\s(?:LSHIFT)\s(\d+) -> ([a-zA-Z]+)");
         public static Regex RSHIFT = new Regex(@"([a-zA-Z]+)\s(?:RSHIFT)\s(\d+) -> ([a-zA-Z]+)");
@@ -37,7 +38,7 @@ namespace aoc2015
                 {
                     var value = UInt16.Parse(match[0].Groups[1].Value);
                     var destination = match[0].Groups[2].Value;
-                    wires.Add(new Wire() { Name = destination, Value = value, Depend1 = match[0].Groups[1].Value, ConnectionType = ConnectionType.SIGNALValue, IsDone = true });
+                    wires.Add(new Wire() { Name = destination, Value = value, Input = value, ConnectionType = ConnectionType.SIGNALValue, IsDone = true });
                     continue;
                 }
 
@@ -79,6 +80,27 @@ namespace aoc2015
 
                     UInt16 value = (UInt16)(sourceWire1.Value & sourceWire2.Value);
                     wires.Add(new Wire() { Name = destination, Value = value, Depend1 = source1, Depend2 = source2, ConnectionType = ConnectionType.AND, IsDone = true });
+                    continue;
+                }
+
+                match = ANDValue.Matches(input);
+                if (match.Count > 0)
+                {
+                    var source1 = UInt16.Parse(match[0].Groups[1].Value);
+                    var source2 = match[0].Groups[2].Value;
+                    var destination = match[0].Groups[3].Value;
+
+                    var sourceWire2 = wires.FirstOrDefault(w => w.Name == source2);
+                    var destinationWire = wires.FirstOrDefault(w => w.Name == destination);
+
+                    if (sourceWire2 is null || sourceWire2.IsDone == false)
+                    {
+                        wires.Add(new Wire() { Name = destination, Depend2 = source2, Input = source1, ConnectionType = ConnectionType.ANDValue });
+                        continue;
+                    }
+
+                    UInt16 value = (UInt16)(source1 & sourceWire2.Value);
+                    wires.Add(new Wire() { Name = destination, Value = value, Depend2 = source2, Input = source1, ConnectionType = ConnectionType.ANDValue, IsDone = true });
                     continue;
                 }
 
@@ -167,43 +189,45 @@ namespace aoc2015
 
         }
 
-
-        public static void ConnectWires(List<Wire> wires)
-        {
-            foreach (var wire in wires)
-            {
-                if (wire.IsDone)
-                    continue;
-
-                try
-                {
-                    if (wire.Depend1 is null && wire.Depend2 is null)
-                    {
-                        UpdateWireValue(wires, wire);
-                    }
-
-
-                    if (wires.First(w => w.Name == wire.Depend1).IsDone && wire.Depend2 is null)
-                    {
-                        UpdateWireValue(wires, wire);
-                    }
-
-                    if (wires.First(w => w.Name == wire.Depend1).IsDone &&
-                        (wire.Depend2 != null && wires.First(w => w.Name == wire.Depend2).IsDone))
-                    {
-                        UpdateWireValue(wires, wire);
-                    }
-                }
-                catch (Exception)
-                {
-                    continue;
-                }
-            }
-        }
-
         public static void SortWiresByDependency(List<Wire> wires)
         {
-            wires.Shuffle();
+            List<Tuple<string, string>> tuples= new List<Tuple<string, string>>();
+            List<string> nodes = new List<string>();
+            foreach (var wire in wires)
+            {
+                bool Depend1OK = true;
+                if (wire.Depend1 != null && wires.First(w => w.Name == wire.Depend1).IsDone == false)
+                    Depend1OK = false;
+
+                bool Depend2OK = true;
+                if (wire.Depend2 != null && wires.First(w => w.Name == wire.Depend2).IsDone == false)
+                    Depend2OK = false;
+
+                if(Depend1OK && Depend2OK)
+                {
+                    if (Depend1OK && wire.Depend1 != null)
+                        tuples.Add(Tuple.Create(wire.Name, wire.Depend1));
+                    if (Depend2OK && wire.Depend2 != null)
+                        tuples.Add(Tuple.Create(wire.Name, wire.Depend2));
+
+                    nodes.Add(wire.Name);
+                }
+
+            }
+
+
+            var ret = TopologicalSort(
+                new HashSet<string>(nodes.ToArray()),
+                new HashSet<Tuple<string, string>>(
+                    tuples
+                )
+            );
+
+            foreach (var wireName in ret) {
+                UpdateWireValue(wires, wires.First(w => w.Name == wireName));
+            }
+
+
         }
 
 
@@ -224,6 +248,10 @@ namespace aoc2015
                     break;
                 case ConnectionType.AND:
                     wire.Value = (UInt16)(sourceWire1.Value & sourceWire2.Value);
+                    wire.IsDone = true;
+                    break;
+                case ConnectionType.ANDValue:
+                    wire.Value = (UInt16)(wire.Input & sourceWire2.Value);
                     wire.IsDone = true;
                     break;
                 case ConnectionType.OR:
@@ -248,31 +276,40 @@ namespace aoc2015
 
         }
 
-        public static int Part1(List<string> inputs)
+        public static List<Wire> Part1(List<string> inputs)
         {
             var wires = GetInitialWireList(inputs);
-
-            //foreach (var input in inputs)
-            //{
-            //    ConnectWires(input, wires);
-            //}
-
-
-
             while (wires.Any(w => w.IsDone == false))
             {
                 SortWiresByDependency(wires);
-                ConnectWires(wires);
-                var left = wires.Count(w => w.IsDone == false);
-                Console.WriteLine($"Left: {left}");
             }
 
-            return -1;
+            return wires;
         }
 
         public static int Part2(List<string> inputs)
         {
-            return -1;
+            var wires = GetInitialWireList(inputs);
+            while (wires.Any(w => w.IsDone == false))
+            {
+                SortWiresByDependency(wires);
+            }
+
+            var aValue = wires.First(w => w.Name == "a").Value;
+
+            //Reset
+            wires = GetInitialWireList(inputs);
+            //Change
+            wires.First(w => w.Name == "b").Value = aValue;
+            wires.First(w => w.Name == "b").Input = aValue;
+
+            //Recalculate
+            while (wires.Any(w => w.IsDone == false))
+            {
+                SortWiresByDependency(wires);
+            }
+
+            return wires.First(w => w.Name == "a").Value;
         }
 
         public class Wire
@@ -293,6 +330,7 @@ namespace aoc2015
             SIGNALValue,
             SIGNAL,
             AND,
+            ANDValue,
             OR,
             LSHIFT,
             RSHIFT,
@@ -301,18 +339,60 @@ namespace aoc2015
 
 
 
-        private static Random rng = new Random();
-
-        public static void Shuffle<T>(this IList<T> list)
+        /// <summary>
+        /// Topological Sorting (Kahn's algorithm) 
+        /// </summary>
+        /// <remarks>https://en.wikipedia.org/wiki/Topological_sorting</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nodes">All nodes of directed acyclic graph.</param>
+        /// <param name="edges">All edges of directed acyclic graph.</param>
+        /// <returns>Sorted node in topological order.</returns>
+        static List<T> TopologicalSort<T>(HashSet<T> nodes, HashSet<Tuple<T, T>> edges) where T : IEquatable<T>
         {
-            int n = list.Count;
-            while (n > 1)
+            // Empty list that will contain the sorted elements
+            var L = new List<T>();
+
+            // Set of all nodes with no incoming edges
+            var S = new HashSet<T>(nodes.Where(n => edges.All(e => e.Item2.Equals(n) == false)));
+
+            // while S is non-empty do
+            while (S.Any())
             {
-                n--;
-                int k = rng.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
+
+                //  remove a node n from S
+                var n = S.First();
+                S.Remove(n);
+
+                // add n to tail of L
+                L.Add(n);
+
+                // for each node m with an edge e from n to m do
+                foreach (var e in edges.Where(e => e.Item1.Equals(n)).ToList())
+                {
+                    var m = e.Item2;
+
+                    // remove edge e from the graph
+                    edges.Remove(e);
+
+                    // if m has no other incoming edges then
+                    if (edges.All(me => me.Item2.Equals(m) == false))
+                    {
+                        // insert m into S
+                        S.Add(m);
+                    }
+                }
+            }
+
+            // if graph has edges then
+            if (edges.Any())
+            {
+                // return error (graph has at least one cycle)
+                return null;
+            }
+            else
+            {
+                // return L (a topologically sorted order)
+                return L;
             }
         }
 

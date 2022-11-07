@@ -1,5 +1,6 @@
 using Common;
 using static aoc2015.Day02;
+using static aoc2015.Day07;
 
 namespace aoc2015.Tests
 {
@@ -27,10 +28,10 @@ namespace aoc2015.Tests
         [TestCase("i", 65079)]
         [TestCase("x", 123)]
         [TestCase("y", 456)]
-        public void ExamplePart1(string wire, int value)
+        public void ExamplePart1(string wire, int expected)
         {
-            var answer = Day07.Part1(exampleInput);
-            //Assert.AreEqual(expected, answer);
+            var wires = Day07.Part1(exampleInput);
+            Assert.AreEqual(expected, wires.First(w => w.Name == wire).Value);
         }
 
 
@@ -38,18 +39,8 @@ namespace aoc2015.Tests
         [Test]
         public void Part1()
         {
-            var answer = Day07.Part1(input);
-            Assert.AreEqual(0, answer);
-        }
-
-
-        [Test]
-        [TestCase("turn on 0,0 through 0,0", 1)]
-        [TestCase("toggle 0,0 through 999,999", 2000000)]
-        public void ExamplePart2(string input, int expected)
-        {
-            var answer = Day07.Part2(new List<string> { input });
-            Assert.AreEqual(expected, answer);
+            var wires = Day07.Part1(input);
+            Assert.AreEqual(46065, wires.First(w => w.Name == "a").Value);
         }
 
 
@@ -57,7 +48,7 @@ namespace aoc2015.Tests
         public void Part2()
         {
             var answer = Day07.Part2(input);
-            Assert.AreEqual(0, answer);
+            Assert.AreEqual(14134, answer);
         }
     }
 
