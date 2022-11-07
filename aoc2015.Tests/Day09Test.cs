@@ -30,22 +30,14 @@ namespace aoc2015.Tests
         public void Part1()
         {
             var answer = Day09.Part1(input);
-            Assert.AreEqual(0, answer);
-        }
-
-
-        [Test]
-        public void ExamplePart2()
-        {
-            var answer = Day09.Part2(exampleInput);
-            Assert.AreEqual(0, answer);
+            Assert.AreEqual(141, answer);
         }
 
         [Test]
         public void Part2()
         {
             var answer = Day09.Part2(input);
-            Assert.AreEqual(0, answer);
+            Assert.AreEqual(736, answer);
         }
     }
 

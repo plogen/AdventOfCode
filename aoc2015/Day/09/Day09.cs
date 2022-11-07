@@ -12,10 +12,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static aoc2015.Day03;
 using static aoc2015.Day07;
-
-using Dijkstra.NET.Graph;
-using Dijkstra.NET.ShortestPath;
-using Dijkstra.NET.PageRank;
 using System.Collections;
 
 namespace aoc2015
@@ -27,96 +23,40 @@ namespace aoc2015
 
         public static int Part1(List<string> inputs)
         {
-
-            var routes = new HashSet<Route>();
-            foreach (var input in inputs)
-            {
-                routes.Add(GetRoute(input));
-            }
-
-
-
-
-            //var townSet = new HashSet<string>();
-            //var distances = new Dictionary<(string source, string destination), int>();
-
-            //foreach (var route in routes)
-            //{
-            //    townSet.Add(route.Source);
-            //    townSet.Add(route.Destination);
-            //    distances[(route.Source, route.Destination)] = route.Distance;
-            //    distances[(route.Destination, route.Source)] = route.Distance;
-            //}
-
-            //// convert adjacency list to adjacency matrix
-            //string[] townNames = townSet.ToArray();
-            //int numTowns = townNames.Length;
-
-            //int[,] adjMatrix = new int[numTowns, numTowns];
-            //int[] towns = new int[numTowns];
-            //for (int a = 0; a < numTowns; a++)
-            //{
-            //    towns[a] = a;
-            //    for (int b = 0; b < numTowns; b++)
-            //    {
-            //        if (a != b)
-            //        {
-            //            adjMatrix[a, b] = distances[(townNames[a], townNames[b])];
-            //        }
-            //    }
-            //}
-
-
-            //int minDistance = int.MaxValue;
-            //int maxDistance = int.MinValue;
-            //foreach (Span<int> perm in towns.AsSpan().GetPermutations())
-            //{
-            //    int pathDist = 0;
-            //    int prevTown = perm[0];
-            //    for (int j = 1; j < numTowns; j++)
-            //    {
-            //        int town = perm[j];
-            //        pathDist += adjMatrix[prevTown, town];
-            //        prevTown = town;
-            //    }
-
-            //    minDistance = Math.Min(minDistance, pathDist);
-            //    maxDistance = Math.Max(maxDistance, pathDist);
-            //}
-
-            //var Part1Aswer = minDistance;
-            //var Part2Aswer = maxDistance;
-
-
-
-
-
-
-            //var graph = new Graph<string, string>();
-            //foreach (var route in routes) {
-            //    if (dic.ContainsKey(route.Source) == false)
-            //    {
-            //        uint a = graph.AddNode(route.Source);
-            //        dic.Add(route.Source, a);
-            //    }
-            //    if (dic.ContainsKey(route.Destination) == false)
-            //    {
-            //        uint b = graph.AddNode(route.Destination);
-            //        dic.Add(route.Destination, b);
-            //    }
-            //    graph.Connect(dic[route.Source], dic[route.Destination], route.Distance, $"{route.Source}>>{route.Destination}"); //First node has key equal 1
-            //}
-            //var result = graph.Dijkstra(dic["London"], dic["Belfast"]);
-            //uint[] path = result.GetPath().ToArray();
-
-
-            return -1;
+            IEnumerable<int> costs = GetDistances(inputs);
+            return costs.Min();
         }
-
 
         public static int Part2(List<string> inputs)
         {
-            return -1;
+            IEnumerable<int> costs = GetDistances(inputs);
+            return costs.Max();
+        }
+
+        private static IEnumerable<int> GetDistances(List<string> inputs)
+        {
+            var routes = new HashSet<Route>();
+            foreach (var input in inputs)
+            {
+                var r = GetRoute(input);
+                routes.Add(r);
+                routes.Add(GetRevertedRoute(r));
+            }
+
+            var cities = new HashSet<string>();
+            foreach (var route in routes)
+            {
+                cities.Add(route.Source);
+                cities.Add(route.Destination);
+            }
+
+
+            var permutations = GetPermutations(cities, cities.Count);
+            var costs = permutations.Select(p =>
+                            p.Zip(p.Skip(1), (source, destination) => //Get Pairwise
+                            routes.First(r => r.Source == source && r.Destination == destination).Distance)
+                            .Sum());
+            return costs;
         }
 
         public class Route
@@ -137,7 +77,27 @@ namespace aoc2015
                 };
         }
 
+        public static Route GetRevertedRoute(Route route)
+        {
+            return
+                new Route()
+                {
+                    Source = route.Destination,
+                    Destination = route.Source,
+                    Distance = route.Distance
+                };
+        }
 
+
+        //https://stackoverflow.com/questions/756055/listing-all-permutations-of-a-string-integer
+        static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
+        {
+            if (length == 1) return list.Select(t => new T[] { t });
+
+            return GetPermutations(list, length - 1)
+                .SelectMany(t => list.Where(e => !t.Contains(e)),
+                    (t1, t2) => t1.Concat(new T[] { t2 }));
+        }
 
     }
 }
