@@ -46,7 +46,7 @@ namespace aoc2015.Tests
         }
 
         [Test]
-        [TestCase("hxbxwxba", "???")]
+        [TestCase("hxbxwxba", "hxcaabcc")]
         public void Part2(string input, string expected)
         {
             var answer = Day11.Part2(input);
