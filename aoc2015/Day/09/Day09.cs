@@ -49,8 +49,8 @@ namespace aoc2015
                 cities.Add(route.Destination);
             }
 
-
-            var permutations = GetPermutations(cities, cities.Count);
+            
+            var permutations = Algorithms.GetPermutations(cities, cities.Count);
             var costs = permutations.Select(p =>
                             p.Zip(p.Skip(1), (source, destination) => //Get Pairwise
                             routes.First(r => r.Source == source && r.Destination == destination).Distance)
@@ -85,17 +85,6 @@ namespace aoc2015
                     Destination = route.Source,
                     Distance = route.Distance
                 };
-        }
-
-
-        //https://stackoverflow.com/questions/756055/listing-all-permutations-of-a-string-integer
-        static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
-        {
-            if (length == 1) return list.Select(t => new T[] { t });
-
-            return GetPermutations(list, length - 1)
-                .SelectMany(t => list.Where(e => !t.Contains(e)),
-                    (t1, t2) => t1.Concat(new T[] { t2 }));
         }
 
     }
