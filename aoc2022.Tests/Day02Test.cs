@@ -23,14 +23,14 @@ namespace aoc2022.Tests
         [Test]
         public void ExamplePart1()
         {
-            var answer = Day01.Part1(exampleInput);
-            Assert.AreEqual(-1, answer);
+            var answer = Day02.Part1(exampleInput);
+            Assert.AreEqual(15, answer);
         }
 
         [Test]
         public void Part1()
         {
-            var answer = Day01.Part1(input);
+            var answer = Day02.Part1(input);
             Assert.AreEqual(-1, answer);
         }
 
@@ -38,9 +38,12 @@ namespace aoc2022.Tests
         [Test]
         public void Part2()
         {
-            var answer = Day01.Part2(input);
+            var answer = Day02.Part2(input);
             Assert.AreEqual(-1, answer);
         }
+
+
+
     }
 
 
