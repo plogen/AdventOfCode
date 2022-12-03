@@ -11,23 +11,37 @@ namespace aoc2022
     {
         public static long Part1(List<string> input)
         {
-            return input.Select(x => GetRoundPoints(x)).Sum();
+            return input.Select(x => GetRoundPointsPart1(x)).Sum();
         }
 
         public static long Part2(List<string> input)
         {
-            return 0;
+            return input.Select(x => GetRoundPointsPart2(x)).Sum();
         }
 
 
-
-
-        private static int GetRoundPoints(string input)
+        private static int GetRoundPointsPart1(string input)
         {
             var oponentHand = OponentHand(input[0]);
             var myHand = MyHand(input[2]);
 
+            return GetPointsGromHands(oponentHand, myHand);
 
+        }
+
+        private static int GetRoundPointsPart2(string input)
+        {
+            var oponentHand = OponentHand(input[0]);
+            var expexterResult = GetResult(input[2]);
+            var myHand = GetHandForExpextedResult(expexterResult, oponentHand);
+
+            return GetPointsGromHands(oponentHand, myHand);
+        }
+
+
+
+        private static int GetPointsGromHands(Hand oponentHand, Hand myHand)
+        {
             int outcomeScore = 0;
             int handScore = 0;
 
@@ -74,10 +88,59 @@ namespace aoc2022
             }
 
             return outcomeScore + handScore;
-
         }
 
 
+        private static Hand GetHandForExpextedResult(Result expectedResult, Hand oponentHand)
+        {
+            if (expectedResult == Result.Draw)
+                return oponentHand;
+
+            if (oponentHand == Hand.Rock)
+            {
+                switch (expectedResult)
+                {
+                    case Result.Lose:
+                        return Hand.Scissor;
+                    case Result.Win:
+                        return Hand.Paper;
+                    default:
+                        throw new System.Exception("Invalid evaluation");
+                        break;
+                }
+            }
+
+            if (oponentHand == Hand.Paper)
+            {
+                switch (expectedResult)
+                {
+                    case Result.Lose:
+                        return Hand.Rock;
+                    case Result.Win:
+                        return Hand.Scissor;
+                    default:
+                        throw new System.Exception("Invalid evaluation");
+                        break;
+                }
+            }
+
+            if (oponentHand == Hand.Scissor)
+            {
+                switch (expectedResult)
+                {
+                    case Result.Lose:
+                        return Hand.Paper;
+                    case Result.Win:
+                        return Hand.Rock;
+                    default:
+                        throw new System.Exception("Invalid evaluation");
+                        break;
+                }
+            }
+
+            throw new System.Exception("Invalid evaluation");
+
+        }
 
 
 
@@ -114,11 +177,37 @@ namespace aoc2022
         }
 
 
+
+        private static Result GetResult(char input)
+        {
+            switch (input)
+            {
+                case 'X':
+                    return Result.Lose;
+                case 'Y':
+                    return Result.Draw;
+                case 'Z':
+                    return Result.Win;
+                default:
+                    throw new System.Exception("Invalid input");
+                    break;
+            }
+        }
+
+
         public enum Hand
         {
             Rock,
             Paper,
             Scissor
+        }
+
+
+        public enum Result
+        {
+            Lose,
+            Draw,
+            Win
         }
 
 
