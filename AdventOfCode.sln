@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aoc2015", "aoc2015\aoc2015.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aoc2015.Tests", "aoc2015.Tests\aoc2015.Tests.csproj", "{4B41CE75-5371-40D4-92D8-C25F539864FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aoc2022", "aoc2022\aoc2022.csproj", "{871EECCE-21F5-43B7-89DA-A5BDB4593290}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aoc2022", "aoc2022\aoc2022.csproj", "{871EECCE-21F5-43B7-89DA-A5BDB4593290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aoc2022.Tests", "aoc2022.Tests\aoc2022.Tests.csproj", "{00E324A9-A80A-474E-8E6E-7FE4CAE0C805}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aoc2022.Tests", "aoc2022.Tests\aoc2022.Tests.csproj", "{00E324A9-A80A-474E-8E6E-7FE4CAE0C805}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
