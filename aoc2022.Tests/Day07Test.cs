@@ -46,7 +46,7 @@ namespace aoc2022.Tests
         public void Part2()
         {
             var answer = Day07.Part2(input);
-            Assert.AreEqual(0, answer);
+            Assert.AreEqual(272298, answer);
         }
 
 
