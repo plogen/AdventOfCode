@@ -23,7 +23,7 @@ namespace aoc2015.Tests
         public void ExamplePart1()
         {
             var answer = Day15.Part1(exampleInput);
-            Assert.AreEqual(0, answer);
+            Assert.AreEqual(62842880, answer);
         }
 
         [Test]
