@@ -13,7 +13,6 @@ namespace aoc2022
 
         public static int Part1(List<string> input)
         {
-
             byte[,] trees = GetTrees(input);
             return Part1NotSoNiceSolution(trees);
         }
@@ -25,20 +24,24 @@ namespace aoc2022
 
             int width = trees.GetLength(0);
             int height = trees.GetLength(1);
-            int visableCount = 0;
+            HashSet<int> result = new HashSet<int>();
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
+                    int visableCount = 0;
                     visableCount += GetVisableTrees(trees, width, height, x, y, 0, -1).visableTrees; //North
                     visableCount *= GetVisableTrees(trees, width, height, x, y, 0, 1).visableTrees; //South
                     visableCount *= GetVisableTrees(trees, width, height, x, y, 1, 0).visableTrees; //East
                     visableCount *= GetVisableTrees(trees, width, height, x, y, -1, 0).visableTrees; //West
+                    result.Add(visableCount);
                 }
             }
 
-            return visableCount;
+            return result.Max();
         }
+
+
 
 
         private static int Part1NotSoNiceSolution(byte[,] trees)
@@ -82,8 +85,8 @@ namespace aoc2022
             var tree = trees[currentPosX, currentPosY];
             int visableTrees = 0;
 
-            var x = currentPosX;
-            var y = currentPosY;
+            var x = currentPosX + horizantalStepDir;
+            var y = currentPosY + verticalStepDir;
             while (x >= 0 && x < width && y >= 0 && y < heigh)
             {
                 visableTrees++;
@@ -94,27 +97,6 @@ namespace aoc2022
                 x += horizantalStepDir;
                 y += verticalStepDir;
             }
-            return (true, visableTrees);
-
-            //for (int x = currentPosX + horizantalStepDir; x >= 0 && x < width; x += horizantalStepDir)
-            //{
-            //    for (int y = currentPosY + verticalStepDir; y >= 0 && y < heigh; y += verticalStepDir)
-            //    {
-            //        if (trees[x, y] >= tree)
-            //        {
-            //            return (false, visableTrees);
-            //        }
-                    
-            //        visableTrees++;
-
-            //        if (verticalStepDir == 0)
-            //            break;
-
-            //    }
-            //    if (horizantalStepDir == 0)
-            //        break;
-            //}
-
             return (true, visableTrees);
         }
 
