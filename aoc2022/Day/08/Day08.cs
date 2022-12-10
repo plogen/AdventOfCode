@@ -13,6 +13,53 @@ namespace aoc2022
 
         public static int Part1(List<string> input)
         {
+
+            byte[,] trees = GetTrees(input);
+            return Part1NotSoNiceSolution(trees);
+        }
+
+
+        public static int Part2(List<string> input)
+        {
+            byte[,] trees = GetTrees(input);
+
+            int width = trees.GetLength(0);
+            int height = trees.GetLength(1);
+            int visableCount = 0;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    visableCount += GetVisableTrees(trees, width, height, x, y, 0, -1).visableTrees; //North
+                    visableCount *= GetVisableTrees(trees, width, height, x, y, 0, 1).visableTrees; //South
+                    visableCount *= GetVisableTrees(trees, width, height, x, y, 1, 0).visableTrees; //East
+                    visableCount *= GetVisableTrees(trees, width, height, x, y, -1, 0).visableTrees; //West
+                }
+            }
+
+            return visableCount;
+        }
+
+
+        private static int Part1NotSoNiceSolution(byte[,] trees)
+        {
+            int width = trees.GetLength(0);
+            int height = trees.GetLength(1);
+            int visableCount = 0;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (IsVisable(trees, width, height, x, y))
+                        visableCount++;
+                }
+            }
+
+            return visableCount;
+        }
+
+        private static byte[,] GetTrees(List<string> input)
+        {
             int width = input[0].Length;
             int height = input.Count;
             byte[,] trees = new byte[width, height];
@@ -26,18 +73,49 @@ namespace aoc2022
                 }
             }
 
-            int visableCount = 0;
-            for (int x = 0; x < width; x++)
+            return trees;
+        }
+
+
+        private static (bool visable, int visableTrees) GetVisableTrees(byte[,] trees, int width, int heigh, int currentPosX, int currentPosY, int horizantalStepDir, int verticalStepDir)
+        {
+            var tree = trees[currentPosX, currentPosY];
+            int visableTrees = 0;
+
+            var x = currentPosX;
+            var y = currentPosY;
+            while (x >= 0 && x < width && y >= 0 && y < heigh)
             {
-                for (int y = 0; y < height; y++)
+                visableTrees++;
+                if (tree <= trees[x, y])
                 {
-                    if(IsVisable(trees, width, height, x, y))
-                        visableCount++;
+                    return (false, visableTrees);
                 }
+                x += horizantalStepDir;
+                y += verticalStepDir;
             }
+            return (true, visableTrees);
 
+            //for (int x = currentPosX + horizantalStepDir; x >= 0 && x < width; x += horizantalStepDir)
+            //{
+            //    for (int y = currentPosY + verticalStepDir; y >= 0 && y < heigh; y += verticalStepDir)
+            //    {
+            //        if (trees[x, y] >= tree)
+            //        {
+            //            return (false, visableTrees);
+            //        }
+                    
+            //        visableTrees++;
 
-            return visableCount;
+            //        if (verticalStepDir == 0)
+            //            break;
+
+            //    }
+            //    if (horizantalStepDir == 0)
+            //        break;
+            //}
+
+            return (true, visableTrees);
         }
 
         private static bool IsVisable(byte[,] trees, int width, int heigh, int x, int y)
@@ -49,7 +127,7 @@ namespace aoc2022
 
             //North
             bool visableNorth = true;
-            for (int n = y-1; n >= 0; n--)
+            for (int n = y - 1; n >= 0; n--)
             {
                 if (trees[x, n] >= tree)
                     visableNorth = false;
@@ -57,7 +135,7 @@ namespace aoc2022
 
             //South
             bool visableSouth = true;
-            for (int s = y+1; s < heigh; s++)
+            for (int s = y + 1; s < heigh; s++)
             {
                 if (trees[x, s] >= tree)
                     visableSouth = false;
@@ -81,12 +159,6 @@ namespace aoc2022
 
 
             return (visableNorth || visableSouth || visableEast || visableWest);
-        }
-
-
-        public static int Part2(List<string> input)
-        {
-            return 0;
         }
 
     }
