@@ -5,7 +5,7 @@
     },
     "NewDay": {
       "commandName": "Project",
-      "commandLineArgs": "new Day01 package name"
+      "commandLineArgs": "new day 3 -p StringList"
     }
   }
 }

@@ -9,7 +9,7 @@ app.Configure(config =>
 {
     config.AddBranch<NewSettings>("new", add =>
     {
-        add.AddCommand<AddPackageCommand>("package");
+        add.AddCommand<NewDayCommand>("day");
         add.AddCommand<AddReferenceCommand>("reference");
     });
 });
@@ -20,17 +20,17 @@ return app.Run(args);
 
 public class NewSettings : CommandSettings
 {
-    [CommandArgument(0, "[DAY]")]
-    public string Day { get; set; }
+    //[CommandArgument(0, "[DAY]")]
+    //public string Day { get; set; }
 }
 
-public class AddPackageSettings : NewSettings
+public class NewDaySettings : NewSettings
 {
-    [CommandArgument(0, "<PACKAGE_NAME>")]
-    public string PackageName { get; set; }
+    [CommandArgument(0, "<DAY>")]
+    public int Day { get; set; }
 
-    [CommandOption("-v|--version <VERSION>")]
-    public string Version { get; set; }
+    [CommandOption("-p|--pattern")]
+    public string? InputType { get; init; }
 }
 
 public class AddReferenceSettings : NewSettings
@@ -41,9 +41,9 @@ public class AddReferenceSettings : NewSettings
 
 
 
-public class AddPackageCommand : Command<AddPackageSettings>
+public class NewDayCommand : Command<NewDaySettings>
 {
-    public override int Execute(CommandContext context, AddPackageSettings settings)
+    public override int Execute(CommandContext context, NewDaySettings settings)
     {
         // Omitted
         return 0;
