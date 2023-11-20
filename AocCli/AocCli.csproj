@@ -8,7 +8,8 @@
 
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>aoc</ToolCommandName>
-    <PackageOutputPath>./nupkg</PackageOutputPath>    
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageVersion>$([System.DateTime]::Now.ToString("yyyy.MM.dd.HHmmss"))</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
