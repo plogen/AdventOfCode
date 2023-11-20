@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "AocCli": {
+      "commandName": "Project"
+    },
+    "NewDay": {
+      "commandName": "Project",
+      "commandLineArgs": "new Day01 package name"
+    }
+  }
+}

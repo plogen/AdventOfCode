@@ -3,8 +3,64 @@ using Spectre.Console;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-var app = new CommandApp<FileSizeCommand>();
+var app = new CommandApp();
+
+app.Configure(config =>
+{
+    config.AddBranch<NewSettings>("new", add =>
+    {
+        add.AddCommand<AddPackageCommand>("package");
+        add.AddCommand<AddReferenceCommand>("reference");
+    });
+});
+
 return app.Run(args);
+
+
+
+public class NewSettings : CommandSettings
+{
+    [CommandArgument(0, "[DAY]")]
+    public string Day { get; set; }
+}
+
+public class AddPackageSettings : NewSettings
+{
+    [CommandArgument(0, "<PACKAGE_NAME>")]
+    public string PackageName { get; set; }
+
+    [CommandOption("-v|--version <VERSION>")]
+    public string Version { get; set; }
+}
+
+public class AddReferenceSettings : NewSettings
+{
+    [CommandArgument(0, "<PROJECT_REFERENCE>")]
+    public string ProjectReference { get; set; }
+}
+
+
+
+public class AddPackageCommand : Command<AddPackageSettings>
+{
+    public override int Execute(CommandContext context, AddPackageSettings settings)
+    {
+        // Omitted
+        return 0;
+    }
+}
+
+public class AddReferenceCommand : Command<AddReferenceSettings>
+{
+    public override int Execute(CommandContext context, AddReferenceSettings settings)
+    {
+        // Omitted
+        return 0;
+    }
+}
+
+
+
 
 internal sealed class FileSizeCommand : Command<FileSizeCommand.Settings>
 {
