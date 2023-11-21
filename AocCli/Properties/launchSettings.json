@@ -5,7 +5,11 @@
     },
     "NewDay": {
       "commandName": "Project",
-      "commandLineArgs": "new day 3 -p StringList"
+      "commandLineArgs": "new day 3"
+    },
+    "NewYear": {
+      "commandName": "Project",
+      "commandLineArgs": "new year"
     }
   }
 }

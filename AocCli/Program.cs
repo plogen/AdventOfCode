@@ -2,6 +2,13 @@
 using Spectre.Console;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using AocCli;
+using Serilog;
+
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
 var app = new CommandApp();
 
@@ -9,8 +16,8 @@ app.Configure(config =>
 {
     config.AddBranch<NewSettings>("new", add =>
     {
+        add.AddCommand<NewYearCommand>("year");
         add.AddCommand<NewDayCommand>("day");
-        add.AddCommand<AddReferenceCommand>("reference");
     });
 });
 
@@ -24,79 +31,49 @@ public class NewSettings : CommandSettings
     //public string Day { get; set; }
 }
 
+public class NewYearSettings : NewSettings
+{
+    //[CommandArgument(0, "<YEAR>")]
+    //public int Year { get; set; }
+
+    [CommandOption("-y|--year <YEAR>")]
+    public int Year { get; set; }
+}
+public class NewYearCommand : Command<NewYearSettings>
+{
+    public override int Execute(CommandContext context, NewYearSettings settings)
+    {
+        var year = settings.Year;
+        if(year == 0)
+            year = DateTime.Now.Year;
+        var solutionDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+        CreateProjectFiles.CreateYear(solutionDir, year);
+        return 0;
+    }
+}
+
 public class NewDaySettings : NewSettings
 {
     [CommandArgument(0, "<DAY>")]
     public int Day { get; set; }
 
-    [CommandOption("-p|--pattern")]
-    public string? InputType { get; init; }
+
+    [CommandOption("-y|--year <YEAR>")]
+    public int Year { get; set; }
 }
-
-public class AddReferenceSettings : NewSettings
-{
-    [CommandArgument(0, "<PROJECT_REFERENCE>")]
-    public string ProjectReference { get; set; }
-}
-
-
 
 public class NewDayCommand : Command<NewDaySettings>
 {
     public override int Execute(CommandContext context, NewDaySettings settings)
     {
-        // Omitted
+        var solutionDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+
+        var year = settings.Year;
+        if (year == 0)
+            year = DateTime.Now.Year;
+
+        CreateProjectFiles.CreateDay(solutionDir, year, settings.Day);
         return 0;
     }
 }
 
-public class AddReferenceCommand : Command<AddReferenceSettings>
-{
-    public override int Execute(CommandContext context, AddReferenceSettings settings)
-    {
-        // Omitted
-        return 0;
-    }
-}
-
-
-
-
-internal sealed class FileSizeCommand : Command<FileSizeCommand.Settings>
-{
-    public sealed class Settings : CommandSettings
-    {
-        [Description("Path to search. Defaults to current directory.")]
-        [CommandArgument(0, "[searchPath]")]
-        public string? SearchPath { get; init; }
-
-        [CommandOption("-p|--pattern")]
-        public string? SearchPattern { get; init; }
-
-        [CommandOption("--hidden")]
-        [DefaultValue(true)]
-        public bool IncludeHidden { get; init; }
-    }
-
-    public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
-    {
-        var searchOptions = new EnumerationOptions
-        {
-            AttributesToSkip = settings.IncludeHidden
-                ? FileAttributes.Hidden | FileAttributes.System
-                : FileAttributes.System
-        };
-
-        var searchPattern = settings.SearchPattern ?? "*.*";
-        var searchPath = settings.SearchPath ?? Directory.GetCurrentDirectory();
-        var files = new DirectoryInfo(searchPath)
-            .GetFiles(searchPattern, searchOptions);
-
-        var totalFileSize = files
-            .Sum(fileInfo => fileInfo.Length);
-
-        AnsiConsole.MarkupLine($"Total file size for [green]{searchPattern}[/] files in [green]{searchPath}[/]: [blue]{totalFileSize:N0}[/] bytes");
-
-        return 0;
-    }
-}
