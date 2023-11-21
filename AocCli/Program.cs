@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using AocCli;
 using Serilog;
+using Common;
 
 
 Log.Logger = new LoggerConfiguration()
@@ -44,12 +45,15 @@ public class NewYearCommand : Command<NewYearSettings>
     public override int Execute(CommandContext context, NewYearSettings settings)
     {
         var year = settings.Year;
-        if(year == 0)
+        if (year == 0)
             year = DateTime.Now.Year;
-        var solutionDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+
+        string solutionDir = Helper.GetSolutionDir();
         CreateProjectFiles.CreateYear(solutionDir, year);
         return 0;
     }
+
+
 }
 
 public class NewDaySettings : NewSettings
@@ -66,11 +70,11 @@ public class NewDayCommand : Command<NewDaySettings>
 {
     public override int Execute(CommandContext context, NewDaySettings settings)
     {
-        var solutionDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
-
         var year = settings.Year;
         if (year == 0)
             year = DateTime.Now.Year;
+
+        string solutionDir = Helper.GetSolutionDir();
 
         CreateProjectFiles.CreateDay(solutionDir, year, settings.Day);
         return 0;

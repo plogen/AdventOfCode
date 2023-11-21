@@ -23,5 +23,16 @@ namespace Common
             return number == 0;
         }
 
+        public static string GetSolutionDir()
+        {
+            string solutionDir = string.Empty;
+            #if DEBUG
+                solutionDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+            #else
+                solutionDir = Environment.CurrentDirectory;
+            #endif
+            return solutionDir;
+        }
+
     }
 }
