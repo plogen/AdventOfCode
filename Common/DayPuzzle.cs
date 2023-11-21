@@ -8,7 +8,7 @@ namespace Common
 {
     public abstract class DayPuzzle
     {
-        protected string raw;
+        protected List<string> input;
 
         public DayPuzzle()
         {
@@ -26,9 +26,7 @@ namespace Common
                 .Where(x => x.ToLower().Contains($"{className}"))
                 .Single();
 
-            raw = File.ReadAllText(file);
-
-
+            //raw = File.ReadAllText(file);
         }
 
 

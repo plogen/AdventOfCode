@@ -44,14 +44,19 @@ namespace AocCli
 
             var number = day.ToString().PadLeft(2, '0');
             var @class = $"Day{number}";
-            var fileName = $"{@class}.cs";
-            var fileFullName = projectDir + "\\" + fileName;
+            //var fileName = $"{@class}.cs";
+            var fileName = $"Solution.cs";
+            var folderName = Path.Combine(projectDir, "Day" + number);
+            var fileFileName = Path.Combine(folderName, fileName);
+            var fileNameSpace = projectName + "." + @class;
 
-            if (!File.Exists(fileFullName))
+            Directory.CreateDirectory(folderName);
+
+            if (!File.Exists(fileFileName))
             {
-                using (var sw = new StreamWriter(fileFullName, false))
+                using (var sw = new StreamWriter(fileFileName, false))
                 {
-                    var generated = Templates.Templates.ClassTemplate(projectName, @class, year, day.ToString());
+                    var generated = Templates.Templates.ClassTemplate(fileNameSpace, @class, year, day.ToString());
                     sw.Write(generated);
                 }
             }

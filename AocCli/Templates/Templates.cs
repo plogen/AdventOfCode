@@ -54,7 +54,31 @@ namespace AocCli.Templates
         }
 
 
-        public  static string ClassTemplate(string @namespace, string @class, int year, string day)
+        public  static string ClassTemplate(string nameSpace, string @class, int year, string day)
+        {
+            return
+@"﻿using Common;
+
+//Puzzle:" + $" https://adventofcode.com/{year}/day/{day}" + @"
+namespace " + nameSpace + @"
+{
+    public class " + @class + @": DayPuzzle
+    {
+        public override object Part1(List<string> input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object Part2(List<string> input)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}";
+        }
+
+
+        public static string TestTemplate(string @namespace, string @class, int year, string day)
         {
             return
 @"﻿using Common;
@@ -76,6 +100,7 @@ namespace " + @namespace + @"
     }
 }";
         }
+
 
     }
 }
