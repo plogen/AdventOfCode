@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using AocCli;
 using Serilog;
 using Common;
+using AocCli.GetPuzzleInput;
 
 
 Log.Logger = new LoggerConfiguration()
@@ -75,8 +76,7 @@ public class NewDayCommand : Command<NewDaySettings>
             year = DateTime.Now.Year;
 
         string solutionDir = Helper.GetSolutionDir();
-
-        CreateProjectFiles.CreateDay(solutionDir, year, settings.Day);
+        Task.Run(async () => await CreateProjectFiles.CreateDayAsync(solutionDir, year, settings.Day)).Wait();
         return 0;
     }
 }
