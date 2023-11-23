@@ -50,6 +50,12 @@ namespace AocCli.Templates
     <ProjectReference Include=""..\Common\Common.csproj"" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="".\**\**\input.txt;.\**\**\exampleInput.txt"">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>";
         }
 
@@ -82,23 +88,59 @@ namespace " + nameSpace + @"
         {
             return
 @"﻿using Common;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using aoc" + year + @";
 
-//Puzzle:" + $" https://adventofcode.com/{year}/day/{day}" + @"
 namespace " + @namespace + @"
 {
-    public class " + @class + @": DayPuzzle
+
+    [TestFixture]
+    public class Day" + day + @"Test
     {
-        public override object Part1(List<string> input)
+        private const int day = " + day + @";
+        private List<string> input = null!;
+        private List<string> exampleInput = null!;
+
+        [OneTimeSetUp]
+        public void Setup()
         {
-            throw new NotImplementedException();
+            input = ReadInputFile.GetInputDayPadding(" + day + @", ""input.txt"");
+            exampleInput = ReadInputFile.GetInputDayPadding(" + day + @", ""exampleInput.txt"");
         }
 
-        public override object Part2(List<string> input)
+        [Test]
+        public void ExamplePart1()
         {
-            throw new NotImplementedException();
+            var answer = new Day" + day + @"().Part1(exampleInput);
+            Assert.AreEqual(-1, answer);
         }
+
+        [Test]
+        public void Part1()
+        {
+            var answer = new Day" + day + @"().Part1(input);
+            Assert.AreEqual(-1, answer);
+        }
+
+        [Test]
+        public void ExamplePart2()
+        {
+            var answer = new Day" + day + @"().Part2(exampleInput);
+            Assert.AreEqual(-1, answer);
+        }
+
+        [Test]
+        public void Part2()
+        {
+            var answer = new Day" + day + @"().Part2(input);
+            Assert.AreEqual(-1, answer);
+        }
+
     }
-}";
+}
+";
         }
 
 

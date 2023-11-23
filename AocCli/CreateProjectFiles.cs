@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AocCli.GetPuzzleInput;
 using AocCli.Templates;
 using Serilog;
 
@@ -37,18 +38,18 @@ namespace AocCli
 
         }
 
-        public static void CreateDay(string solutionDir, int year, int day)
+        public static async Task CreateDayAsync(string solutionDir, int year, int day)
         {
             var projectName = "aoc" + year;
             var projectDir = Path.Combine(solutionDir, projectName);
 
             var number = day.ToString().PadLeft(2, '0');
-            var @class = $"Day{number}";
-            //var fileName = $"{@class}.cs";
-            var fileName = $"Solution.cs";
-            var folderName = Path.Combine(projectDir, "Day" + number);
+            var className = $"Day{number}";
+            var fileName = $"{className}.cs";
+            //var fileName = $"Solution.cs";
+            var folderName = Path.Combine(projectDir, "Day", number);
             var fileFileName = Path.Combine(folderName, fileName);
-            var fileNameSpace = projectName + "." + @class;
+            var fileNameSpace = projectName;
 
             Directory.CreateDirectory(folderName);
 
@@ -56,11 +57,54 @@ namespace AocCli
             {
                 using (var sw = new StreamWriter(fileFileName, false))
                 {
-                    var generated = Templates.Templates.ClassTemplate(fileNameSpace, @class, year, day.ToString());
+                    var generated = Templates.Templates.ClassTemplate(fileNameSpace, className, year, day.ToString());
+                    await sw.WriteAsync(generated);
+                }
+            }
+
+
+            var inputFileFullName = Path.Combine(folderName, "input.txt");
+            if (!File.Exists(inputFileFullName))
+            {
+                var input = await AocService.GetDayInputAsync(year, day);
+                using (var sw = new StreamWriter(inputFileFullName, false))
+                {
+                    await sw.WriteAsync(input);
+                }
+            }
+
+            var exampleInputFileFullName = Path.Combine(folderName, "exampleInput.txt");
+            if (!File.Exists(exampleInputFileFullName))
+            {
+                using (var sw = new StreamWriter(exampleInputFileFullName, false))
+                {
+                    await sw.WriteAsync("");
+                }
+            }
+
+
+
+            var testProjectName = "aoc" + year + ".Tests";
+            var testProjectDir = Path.Combine(solutionDir, testProjectName);
+
+            var testClass = $"Day{number}Test";
+            var testFileName = testClass + ".cs";
+            var testFullFileName = Path.Combine(testProjectDir, testFileName);
+            var testFileNameSpace = testProjectName;
+
+            if (!File.Exists(testFullFileName))
+            {
+                using (var sw = new StreamWriter(testFullFileName, false))
+                {
+                    var generated = Templates.Templates.TestTemplate(testFileNameSpace, testClass, year, number);
                     sw.Write(generated);
                 }
             }
+
+
         }
+
+
 
 
 

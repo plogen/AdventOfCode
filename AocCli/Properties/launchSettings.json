@@ -5,11 +5,11 @@
     },
     "NewDay": {
       "commandName": "Project",
-      "commandLineArgs": "new day 3"
+      "commandLineArgs": "new day 1 -y 2019"
     },
     "NewYear": {
       "commandName": "Project",
-      "commandLineArgs": "new year"
+      "commandLineArgs": "new year -y 2019"
     }
   }
 }
