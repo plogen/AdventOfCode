@@ -1,5 +1,14 @@
 # Create and install AocCli tool fom Source using the .NET CLI
 
+## Example commands
+```
+> aoc new year
+> aoc new year -y 2019
+> aoc new day
+> aoc new day 3
+> aoc new day 3 -y 2019
+```
+
 ## Pack and install globally
 ```
 > cd .\AocCli\
