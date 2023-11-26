@@ -9,6 +9,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Update=".\**\**\input.txt;.\**\**\exampleInput.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>  
 
   <ItemGroup>
     <None Update="Day\10\exampleInput.txt">
