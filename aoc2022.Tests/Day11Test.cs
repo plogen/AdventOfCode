@@ -39,7 +39,7 @@ namespace aoc2022.Tests
         public void ExamplePart2()
         {
             var answer = new Day11().Part2(exampleInput);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(2713310158, answer);
         }
 
         [Test]

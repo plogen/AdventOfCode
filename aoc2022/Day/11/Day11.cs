@@ -6,7 +6,7 @@ using static System.Collections.Specialized.BitVector32;
 //Puzzle: https://adventofcode.com/2022/day/11
 namespace aoc2022
 {
-    public class Day11: DayPuzzle
+    public class Day11 : DayPuzzle
     {
 
         public static Regex numbersRegex = new Regex(@"(\d+)");
@@ -21,60 +21,76 @@ namespace aoc2022
         public override object Part1(List<string> input)
         {
             var monkeys = GetMonkeys(input);
-
-
-
-            //var t = Helper.Operators["+"](1, 2);
-
-            for (int i = 0; i < 20; i++)
-            {
-
-                foreach (var monkey in monkeys)
-                {
-                    while (monkey.Items.Count > 0)
-                    {
-                        var item = monkey.Items.Dequeue();
-
-                        var leftValue = monkey.OperationLeftValue == null ? item : monkey.OperationLeftValue;
-                        var rightValue = monkey.OperationRightValue == null ? item : monkey.OperationRightValue;
-
-                        var afterInspectionValue = Helper.Operators[monkey.Operation]((int)leftValue, (int)rightValue);
-                        var afterReliefValue = Convert.ToInt32(Math.Floor((float)(afterInspectionValue / 3)));
-
-                        if (afterReliefValue % monkey.TestOperationNumber == 0)
-                            monkeys[monkey.TestTrueThrowTo].Items.Enqueue(afterReliefValue);
-                        else
-                            monkeys[monkey.TestFalseThrowTo].Items.Enqueue(afterReliefValue);
-
-                        monkey.Inspections++;
-                    }
-                }
-            }
-
-            var mosteInspectedMokeys = monkeys.OrderByDescending(m => m.Inspections).Take(2).ToList();
-            return mosteInspectedMokeys[0].Inspections * mosteInspectedMokeys[1].Inspections;
-
+            return GetMonkeyBusiness(monkeys, 20, true);
         }
 
         public override object Part2(List<string> input)
         {
-            return -1;
+            var monkeys = GetMonkeys(input);
+            return GetMonkeyBusiness(monkeys, 10000, false);
         }
 
+        private static object GetMonkeyBusiness(List<Monkey> monkeys, int rounds, bool inspectionRelief)
+        {
+            try
+            {
 
+                for (int i = 0; i < rounds; i++)
+                    {
 
+                        foreach (var monkey in monkeys)
+                        {
+                            while (monkey.Items.Count > 0)
+                            {
+                                var item = monkey.Items.Dequeue();
+
+                                var leftValue = monkey.OperationLeftValue == null ? item : monkey.OperationLeftValue;
+                                var rightValue = monkey.OperationRightValue == null ? item : monkey.OperationRightValue;
+
+                                var afterInspectionValue = Helper.Operators[monkey.Operation]((long)leftValue, (long)rightValue);
+
+                                long value;
+                                if (inspectionRelief)
+                                    value = Convert.ToInt64(Math.Floor((double)(afterInspectionValue / 3)));
+                                else
+                                    value = afterInspectionValue;
+
+                                if (value % monkey.TestOperationNumber == 0)
+                                    monkeys[monkey.TestTrueThrowTo].Items.Enqueue(value);
+                                else
+                                    monkeys[monkey.TestFalseThrowTo].Items.Enqueue(value);
+
+                                monkey.Inspections++;
+                            }
+                        }
+                    }
+
+                    var mostInspectedMokeys = monkeys.OrderByDescending(m => m.Inspections).Take(2).ToList();
+                    return (long)mostInspectedMokeys[0].Inspections * (long)mostInspectedMokeys[1].Inspections;
+
+            }
+            catch (OverflowException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
 
         private static List<Monkey> GetMonkeys(List<string> input)
         {
             List<Monkey> monkeys = new();
-            var mokeysCount = (input.Count+1) / 7;
+            var mokeysCount = (input.Count + 1) / 7;
             for (int m = 0; m < mokeysCount; m++)
             {
                 Monkey monkey = new();
                 var itemsString = input[m * 7 + 1];
                 var items = numbersRegex.Matches(itemsString)
                             .Select(m => int.Parse(m.Groups[1].Value)).ToList();
-                items?.ForEach(i => monkey.Items.Enqueue(i));                
+                items?.ForEach(i => monkey.Items.Enqueue(i));
 
                 var operationString = input[m * 7 + 2];
 
@@ -125,18 +141,18 @@ namespace aoc2022
 
     public class Monkey
     {
-        public Queue<int> Items { get; set; } = new Queue<int>();
+        public Queue<long> Items { get; set; } = new Queue<long>();
         public char Operation { get; set; }
-        public int? OperationLeftValue { get; set; }
-        public int? OperationRightValue { get; set; }
+        public long? OperationLeftValue { get; set; }
+        public long? OperationRightValue { get; set; }
 
         public char TestOperation { get; set; }
-        public int TestOperationNumber { get; set; }
+        public long TestOperationNumber { get; set; }
 
         public int TestTrueThrowTo { get; set; }
         public int TestFalseThrowTo { get; set; }
 
-        public int Inspections { get; set; }
+        public long Inspections { get; set; }
     }
 
 }
