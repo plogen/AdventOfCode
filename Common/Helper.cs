@@ -23,12 +23,12 @@ namespace Common
             return number == 0;
         }
 
-        public static readonly Dictionary<string, Func<int, int, int>> Operators = new ()
+        public static readonly Dictionary<char, Func<int, int, int>> Operators = new ()
         {
-            {"+", (x,y) => x+y},
-            {"-", (x,y) => x-y},
-            {"*", (x,y) => x*y},
-            {"/", (x,y) => x/y}
+            {'+', (x,y) => x+y},
+            {'-', (x,y) => x-y},
+            {'*', (x,y) => x*y},
+            {'/', (x,y) => x/y}
         };
 
 
