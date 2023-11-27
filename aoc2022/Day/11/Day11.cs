@@ -1,5 +1,6 @@
 ﻿using Common;
 using System.Collections;
+using System.Numerics;
 using System.Text.RegularExpressions;
 using static System.Collections.Specialized.BitVector32;
 
@@ -32,41 +33,44 @@ namespace aoc2022
 
         private static object GetMonkeyBusiness(List<Monkey> monkeys, int rounds, bool inspectionRelief)
         {
+            var cutOff = 1l;
+            monkeys.ForEach(m => cutOff *= m.TestOperationNumber);
+
             try
             {
 
                 for (int i = 0; i < rounds; i++)
+                {
+
+                    foreach (var monkey in monkeys)
                     {
-
-                        foreach (var monkey in monkeys)
+                        while (monkey.Items.Count > 0)
                         {
-                            while (monkey.Items.Count > 0)
-                            {
-                                var item = monkey.Items.Dequeue();
+                            var item = monkey.Items.Dequeue();
 
-                                var leftValue = monkey.OperationLeftValue == null ? item : monkey.OperationLeftValue;
-                                var rightValue = monkey.OperationRightValue == null ? item : monkey.OperationRightValue;
+                            var leftValue = monkey.OperationLeftValue == null ? item : monkey.OperationLeftValue;
+                            var rightValue = monkey.OperationRightValue == null ? item : monkey.OperationRightValue;
 
-                                var afterInspectionValue = Helper.Operators[monkey.Operation]((long)leftValue, (long)rightValue);
+                            var afterInspectionValue = Helper.Operators[monkey.Operation]((long)leftValue, (long)rightValue);
 
-                                long value;
-                                if (inspectionRelief)
-                                    value = Convert.ToInt64(Math.Floor((double)(afterInspectionValue / 3)));
-                                else
-                                    value = afterInspectionValue;
+                            long value;
+                            if (inspectionRelief)
+                                value = Convert.ToInt64(Math.Floor((double)(afterInspectionValue / 3)));
+                            else
+                                value = afterInspectionValue;
 
-                                if (value % monkey.TestOperationNumber == 0)
-                                    monkeys[monkey.TestTrueThrowTo].Items.Enqueue(value);
-                                else
-                                    monkeys[monkey.TestFalseThrowTo].Items.Enqueue(value);
+                            if (value % monkey.TestOperationNumber == 0)
+                                monkeys[monkey.TestTrueThrowTo].Items.Enqueue(value % cutOff);
+                            else
+                                monkeys[monkey.TestFalseThrowTo].Items.Enqueue(value % cutOff);
 
-                                monkey.Inspections++;
-                            }
+                            monkey.Inspections++;
                         }
                     }
+                }
 
-                    var mostInspectedMokeys = monkeys.OrderByDescending(m => m.Inspections).Take(2).ToList();
-                    return (long)mostInspectedMokeys[0].Inspections * (long)mostInspectedMokeys[1].Inspections;
+                var mostInspectedMokeys = monkeys.OrderByDescending(m => m.Inspections).Take(2).ToList();
+                return mostInspectedMokeys[0].Inspections * mostInspectedMokeys[1].Inspections;
 
             }
             catch (OverflowException ex)

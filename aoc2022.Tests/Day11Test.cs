@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using aoc2022;
+using System.Numerics;
 
 namespace aoc2022.Tests
 {
@@ -46,7 +47,7 @@ namespace aoc2022.Tests
         public void Part2()
         {
             var answer = new Day11().Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(28537348205, answer);
         }
 
     }
