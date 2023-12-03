@@ -32,21 +32,21 @@ namespace aoc2023.Tests
         public void Part1()
         {
             var answer = new Day02().Part1(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(2006, answer);
         }
 
         [Test]
         public void ExamplePart2()
         {
             var answer = new Day02().Part2(exampleInput);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(2286, answer);
         }
 
         [Test]
         public void Part2()
         {
             var answer = new Day02().Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(84911, answer);
         }
 
     }

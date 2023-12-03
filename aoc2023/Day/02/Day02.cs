@@ -28,7 +28,9 @@ namespace aoc2023
 
         public override object Part2(List<string> input)
         {
-            throw new NotImplementedException();
+            List<Game> games = new();
+            input.ForEach(x => games.Add(GetGame(x)));
+            return games.Select(g => g.red * g.green * g.blue).Sum();
         }
 
         private static Game GetGame(string input)
