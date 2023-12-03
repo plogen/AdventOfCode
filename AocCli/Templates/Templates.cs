@@ -20,6 +20,12 @@ namespace AocCli.Templates
     <Nullable>enable</Nullable>
     </PropertyGroup>
 
+  <ItemGroup>
+    <None Update="".\**\**\input.txt;.\**\**\exampleInput.txt"">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
     <ItemGroup>
     <ProjectReference Include=""..\Common\Common.csproj"" />
     </ItemGroup>
