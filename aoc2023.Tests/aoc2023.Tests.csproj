@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update=".\**\**\input.txt;.\**\**\exampleInput.txt">
+    <None Update=".\**\**\input.txt;.\**\**\exampleInput.txt;.\**\**\exampleInput2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
