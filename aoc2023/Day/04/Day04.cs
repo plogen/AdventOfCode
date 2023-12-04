@@ -1,4 +1,5 @@
 ﻿using Common;
+using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 
 //Puzzle: https://adventofcode.com/2023/day/4
@@ -26,7 +27,20 @@ namespace aoc2023
 
         public override object Part2(List<string> input)
         {
-            throw new NotImplementedException();
+            var cards = input.Select(i => GetCard(i)).ToList();
+            var cardCounts = cards.Select(_ => 1).ToArray(); // Initial cards shall be counted
+            for (int i = 0; i < cards.Count; i++)
+            {
+                int points = cards[i].pickedNumbers.Select(p => cards[i].winningNumbers.Contains(p) ? 1 : 0).Sum();
+                if (points > 0)
+                {
+                    for (int j = 1; j <= points; j++)
+                    {
+                        cardCounts[i + j] += cardCounts[i];
+                    }
+                }
+            }
+            return cardCounts.Sum();
         }
 
         private static Card GetCard(string input)
