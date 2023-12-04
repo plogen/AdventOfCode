@@ -39,14 +39,14 @@ namespace aoc2023.Tests
         public void ExamplePart2()
         {
             var answer = new Day03().Part2(exampleInput);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(467835, answer);
         }
 
         [Test]
         public void Part2()
         {
             var answer = new Day03().Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(76314915, answer);
         }
 
     }
