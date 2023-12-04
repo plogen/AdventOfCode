@@ -9,6 +9,15 @@
 > aoc new day 3 -y 2019
 ```
 
+## Session cookie
+Th expected change of session cookie in file "sessionCookie.txt" can be ignored so you dont commit/push the session cookie for everyone to see it.
+```
+> git update-index --skip-worktree sessionCookie.txt
+To resore the change tracking:
+> git update-index --no-skip-worktree default_values.txt
+```
+https://stackoverflow.com/questions/4348590/how-can-i-make-git-ignore-future-revisions-to-a-file
+
 ## Pack and install globally
 ```
 > cd .\AocCli\
