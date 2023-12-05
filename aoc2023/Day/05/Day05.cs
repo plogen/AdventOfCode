@@ -15,10 +15,88 @@ namespace aoc2023
         public override object Part1(List<string> input)
         {
             var seeds = input[0].Substring(7).Split(' ').Select(v => long.Parse(v)).ToList();
-
             var maps = GetMaps(input);
 
-            List<Tuple<string, string>> links = new List<Tuple<string, string>>()
+            long lowestLocation = long.MaxValue;
+            foreach (var seed in seeds)
+            {
+                long destination = GetDestination(maps, links, seed);
+                if (destination < lowestLocation)
+                    lowestLocation = destination;
+            }
+
+            return lowestLocation;
+        }
+        public override object Part2(List<string> input)
+        {
+            var seeds = input[0].Substring(7).Split(' ').Select(v => long.Parse(v)).ToList();
+            
+            var maps = GetMaps(input);
+
+            long lowestLocation = long.MaxValue;
+
+            for (int i = 0; i < seeds.Count; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    for (long seed = seeds[i]; seed < seeds[i]+ seeds[i+1]; seed++)
+                    {
+                        long destination = GetDestination(maps, links, seed);
+                        if (destination < lowestLocation)
+                            lowestLocation = destination;
+                    }
+                }
+            }
+
+            return lowestLocation;
+        }
+
+        private static long GetDestination(List<Map> maps, List<Tuple<string, string>> links, long seed)
+        {
+            var firstLink =
+                    maps.FirstOrDefault(m =>
+                        m.source == "seed" &&
+                        m.destination == "soil" &&
+                        m.sourceStart <= seed &&
+                        m.sourceEnd >= seed);
+
+            long firstDestination;
+            if (firstLink != null)
+            {
+                firstDestination = firstLink.destinationStart + (seed - firstLink.sourceStart);
+            }
+            else
+            {
+                firstDestination = seed;
+            }
+
+
+            long destination = firstDestination;
+            foreach (var link in links)
+            {
+                var xxx = maps.FirstOrDefault(m =>
+                            m.source == link.Item1 &&
+                            m.destination == link.Item2 &&
+                            m.sourceStart <= destination &&
+                            m.sourceEnd >= destination);
+
+                if (xxx != null)
+                {
+                    destination = xxx.destinationStart + (destination - xxx.sourceStart);
+                }
+                else
+                {
+                    destination = destination;
+                }
+            }
+
+            return destination;
+        }
+
+
+
+
+        private static List<Tuple<string, string>> links = new List<Tuple<string, string>>()
             {
                 //new Tuple<string, string>("seed", "soil"),
                 new Tuple<string, string>("soil", "fertilizer"),
@@ -28,59 +106,6 @@ namespace aoc2023
                 new Tuple<string, string>("temperature", "humidity"),
                 new Tuple<string, string>("humidity", "location"),
             };
-
-            List<long> locations = new();
-            foreach (var seed in seeds)
-            {
-                var firstLink =
-                        maps.FirstOrDefault(m =>
-                            m.source == "seed" &&
-                            m.destination == "soil" &&
-                            m.sourceStart <= seed &&
-                            m.sourceEnd >= seed);
-
-                long firstDestination;
-                if (firstLink != null)
-                {
-                    firstDestination = firstLink.destinationStart + (seed - firstLink.sourceStart);
-                }
-                else
-                {
-                    firstDestination = seed;
-                }
-
-
-                long destination = firstDestination;
-                foreach (var link in links)
-                {
-                    var xxx = maps.FirstOrDefault(m =>
-                                m.source == link.Item1 &&
-                                m.destination == link.Item2 &&
-                                m.sourceStart <= destination &&
-                                m.sourceEnd >= destination);
-
-                    if (xxx != null)
-                    {
-                        destination = xxx.destinationStart + (destination - xxx.sourceStart);
-                    }
-                    else
-                    {
-                        destination = destination;
-                    }
-                }
-
-                locations.Add(destination);
-            }
-
-            return locations.Min();
-        }
-
-        public override object Part2(List<string> input)
-        {
-            throw new NotImplementedException();
-        }
-
-
 
         private static List<Map> GetMaps(List<string> input)
         {
