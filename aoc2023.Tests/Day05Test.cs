@@ -46,7 +46,7 @@ namespace aoc2023.Tests
         public void Part2()
         {
             var answer = new Day05().Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(26829166, answer); //326,6min, with same solution as part 1. Now in the morning I fugured that a reverse search from lowest destination to first seed hit would be faster. And remove the source destination strings with something like bytes.
         }
 
     }
