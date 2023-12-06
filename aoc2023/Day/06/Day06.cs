@@ -11,8 +11,20 @@ namespace aoc2023
 
         public override object Part1(List<string> input)
         {
-            var raceTimes = numbersRegex.Matches(input[0]).Select(m => int.Parse(m.Groups[1].Value)).ToList();
-            var raceDistanceRecord = numbersRegex.Matches(input[1]).Select(m => int.Parse(m.Groups[1].Value)).ToList();
+            var raceTimes = numbersRegex.Matches(input[0]).Select(m => long.Parse(m.Groups[1].Value)).ToList();
+            var raceDistanceRecord = numbersRegex.Matches(input[1]).Select(m => long.Parse(m.Groups[1].Value)).ToList();
+            return GetMargin(raceTimes, raceDistanceRecord);
+        }
+        public override object Part2(List<string> input)
+        {
+            var raceTimes = new List<long>() { int.Parse(input[0].Remove(0, 5).Replace(" ", "")) };
+            var raceDistanceRecord = new List<long>() { long.Parse(input[1].Remove(0, 9).Replace(" ", "")) };
+            return GetMargin(raceTimes, raceDistanceRecord);
+        }
+
+
+        private static object GetMargin(List<long> raceTimes, List<long> raceDistanceRecord)
+        {
             int[] wins = new int[raceTimes.Count];
 
             for (int race = 0; race < raceTimes.Count; race++)
@@ -29,7 +41,7 @@ namespace aoc2023
                 }
             }
 
-            int margin = 1;
+            long margin = 1;
             foreach (int win in wins)
             {
                 margin *= win;
@@ -38,10 +50,5 @@ namespace aoc2023
             return margin;
         }
 
-
-        public override object Part2(List<string> input)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
