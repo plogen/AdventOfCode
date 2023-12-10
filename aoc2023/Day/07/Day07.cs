@@ -21,52 +21,26 @@ namespace aoc2023
             foreach (var handTypeGroup in sortedHandGroups)
             {
 
-                var handCounts = handTypeGroup.Count();
-                var rankedHands = 0;
-                while (handCounts != rankedHands)
+                var handsInGroup = handTypeGroup.Select(x => x).ToList();
+
+                try
                 {
-                    for (int c = 0; c < 5; c++)
-                    {
-                        if(Quit())
-                            break;
-
-                        for (int i = 0; i < CardType.Length; i++)
-                        {
-                            if (Quit())
-                                break;
-
-                            var t = handTypeGroup.Where(h => h.Cards[c] == CardType[i]).ToList();
-                            if (t.Count == 0)
-                                continue;
-                            else if (t.Count == 1)
-                            {
-                                Increment();
-                                t.First().Rank = lastRank;
-                                continue;
-                            }
-                            else if (t.Count > 1)
-                            {
-                                break;
-                            }
-                        }
-                    }
+                    handsInGroup.Sort((a, b) => GetHandStrength(a, b));
                 }
-
-                void Increment()
+                catch (ArgumentException)
+                {
+                }
+                
+                foreach (var hand in handsInGroup)
                 {
                     lastRank++;
-                    rankedHands++;
-                }
-
-                bool Quit()
-                {
-                    return handCounts == rankedHands;
+                    hand.Rank = lastRank;
                 }
 
             }
 
             
-            int totalWinnings = 0;
+            long totalWinnings = 0;
             foreach (var handTypeGroup in sortedHandGroups)
             {
                 foreach (var hand in handTypeGroup)
@@ -92,6 +66,43 @@ namespace aoc2023
             public HandType Type { get; set; }
             public int Rank { get; set; }
         }
+
+        private static int GetHandStrength(Hand handA, Hand handB)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (GetCardStrenght(handA.Cards[i]) > GetCardStrenght(handB.Cards[i]))
+                    return 1;
+                if (GetCardStrenght(handA.Cards[i]) < GetCardStrenght(handB.Cards[i]))
+                    return -1;
+            }
+            return 0;
+        }
+
+        private static int GetCardStrenght(char card)
+        {
+            switch (card)
+            {
+                case 'A':
+                    return 14;
+                    break;
+                case 'K':
+                    return 13;
+                    break;
+                case 'Q':
+                    return 12;
+                    break;
+                case 'J':
+                    return 11;
+                    break;
+                case 'T':
+                    return 10;
+                    break;
+                default:
+                    return card - 48;
+            }
+        }
+
 
         private static void SetHandType(Hand hand)
         {
