@@ -20,26 +20,49 @@ namespace aoc2023
             int lastRank = 0;
             foreach (var handTypeGroup in sortedHandGroups)
             {
-
                 var handsInGroup = handTypeGroup.Select(x => x).ToList();
+                handsInGroup.Sort((a, b) => GetHandStrength(a, b, false));
 
-                try
-                {
-                    handsInGroup.Sort((a, b) => GetHandStrength(a, b));
-                }
-                catch (ArgumentException)
-                {
-                }
-                
                 foreach (var hand in handsInGroup)
                 {
                     lastRank++;
                     hand.Rank = lastRank;
                 }
-
             }
 
-            
+            return GetTotalWinnings(sortedHandGroups);
+        }
+
+
+        public override object Part2(List<string> input)
+        {
+            var hands = input.Select(x => new Hand() { Cards = x.Substring(0, 5), Bid = int.Parse(x.Substring(6)) }).ToList();
+            hands.ForEach(x => SetHandType(x));
+            var sortedHandGroups = hands
+                                    .GroupBy(x => x.Type)
+                                    .OrderBy(x => x.Key)
+                                    .ToList();
+
+            int lastRank = 0;
+            foreach (var handTypeGroup in sortedHandGroups)
+            {
+                var handsInGroup = handTypeGroup.Select(x => x).ToList();
+                handsInGroup.Sort((a, b) => GetHandStrength(a, b, true));
+
+                foreach (var hand in handsInGroup)
+                {
+                    lastRank++;
+                    hand.Rank = lastRank;
+                }
+            }
+
+            return GetTotalWinnings(sortedHandGroups);
+        }
+
+
+
+        private static long GetTotalWinnings(List<IGrouping<HandType, Hand>> sortedHandGroups)
+        {
             long totalWinnings = 0;
             foreach (var handTypeGroup in sortedHandGroups)
             {
@@ -49,14 +72,7 @@ namespace aoc2023
                 }
             }
 
-
             return totalWinnings;
-
-        }
-
-        public override object Part2(List<string> input)
-        {
-            throw new NotImplementedException();
         }
 
         private class Hand()
@@ -67,37 +83,35 @@ namespace aoc2023
             public int Rank { get; set; }
         }
 
-        private static int GetHandStrength(Hand handA, Hand handB)
+        private static int GetHandStrength(Hand handA, Hand handB, bool jokerIsActive)
         {
             for (int i = 0; i < 5; i++)
             {
-                if (GetCardStrenght(handA.Cards[i]) > GetCardStrenght(handB.Cards[i]))
+                if (GetCardStrenght(handA.Cards[i], jokerIsActive) > GetCardStrenght(handB.Cards[i], jokerIsActive))
                     return 1;
-                if (GetCardStrenght(handA.Cards[i]) < GetCardStrenght(handB.Cards[i]))
+                if (GetCardStrenght(handA.Cards[i], jokerIsActive) < GetCardStrenght(handB.Cards[i], jokerIsActive))
                     return -1;
             }
             return 0;
         }
 
-        private static int GetCardStrenght(char card)
+        private static int GetCardStrenght(char card, bool jokerIsActive)
         {
             switch (card)
             {
                 case 'A':
                     return 14;
-                    break;
                 case 'K':
                     return 13;
-                    break;
                 case 'Q':
                     return 12;
-                    break;
                 case 'J':
-                    return 11;
-                    break;
+                    if (jokerIsActive)
+                        return 1;
+                    else
+                        return 11;
                 case 'T':
                     return 10;
-                    break;
                 default:
                     return card - 48;
             }
