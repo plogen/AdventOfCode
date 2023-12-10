@@ -11,7 +11,7 @@ namespace aoc2023
         {
 
             var hands = input.Select(x => new Hand() { Cards = x.Substring(0, 5), Bid = int.Parse(x.Substring(6)) }).ToList();
-            hands.ForEach(x => SetHandType(x));
+            hands.ForEach(x => SetHandType(x, false));
             var sortedHandGroups = hands
                                     .GroupBy(x => x.Type)
                                     .OrderBy(x => x.Key)
@@ -37,7 +37,7 @@ namespace aoc2023
         public override object Part2(List<string> input)
         {
             var hands = input.Select(x => new Hand() { Cards = x.Substring(0, 5), Bid = int.Parse(x.Substring(6)) }).ToList();
-            hands.ForEach(x => SetHandType(x));
+            hands.ForEach(x => SetHandType(x, true));
             var sortedHandGroups = hands
                                     .GroupBy(x => x.Type)
                                     .OrderBy(x => x.Key)
@@ -118,37 +118,41 @@ namespace aoc2023
         }
 
 
-        private static void SetHandType(Hand hand)
+        private static void SetHandType(Hand hand, bool jokerIsActive)
         {
             var cards = GetCardCount(hand.Cards);
             var orderedCards = cards.OrderByDescending(c => c.Value);
 
-            if (orderedCards.First().Value == 5)
+            var jokers = 0;
+            if(jokerIsActive)
+                jokers = orderedCards.FirstOrDefault(c => c.Key == 'J').Value;
+
+            if ((orderedCards.First().Value + jokers) == 5)
             {
                 hand.Type = HandType.FiveOfKind;
                 return;
             }
-            else if (orderedCards.First().Value == 4)
+            else if ((orderedCards.First().Value + jokers) == 4)
             {
                 hand.Type = HandType.FourOfKind;
                 return;
             }
-            else if (orderedCards.First().Value == 3 && orderedCards.Skip(1).First().Value == 2)
+            else if ((orderedCards.First().Value + jokers) == 3 && orderedCards.Skip(1).First().Value == 2)
             {
                 hand.Type = HandType.FullHouse;
                 return;
             }
-            else if (orderedCards.First().Value == 3)
+            else if ((orderedCards.First().Value + jokers) == 3)
             {
                 hand.Type = HandType.ThreeOfKind;
                 return;
             }
-            else if (orderedCards.First().Value == 2 && orderedCards.Skip(1).First().Value == 2)
+            else if ((orderedCards.First().Value + jokers) == 2 && orderedCards.Skip(1).First().Value == 2)
             {
                 hand.Type = HandType.TwoPair;
                 return;
             }
-            else if (orderedCards.First().Value == 2)
+            else if ((orderedCards.First().Value + jokers) == 2)
             {
                 hand.Type = HandType.OnePair;
                 return;

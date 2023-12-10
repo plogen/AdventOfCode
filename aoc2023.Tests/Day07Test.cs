@@ -45,7 +45,7 @@ namespace aoc2023.Tests
         [Test]
         public void Part2()
         {
-            var answer = new Day07().Part2(input);
+            var answer = new Day07().Part2(input); // 249855869 is to high
             Assert.AreEqual(-1, answer);
         }
 
