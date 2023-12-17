@@ -23,13 +23,22 @@ namespace aoc2023
 
         public override object Part2(List<string> input)
         {
-            throw new NotImplementedException();
+            int[,] map = GetMap(input);
+            var animal = Helper.SearchArray(0, map);
+            var animalWays = GetWays(map, animal);
+
+            var startingPosition = (animal.X, animal.Y);
+
+            var way1 = (animalWays.Value.way1.Item1, animalWays.Value.way1.Item2);
+            var way1stepps = GetSteppedMap(map, animal, startingPosition, way1);
+
+            return null;
         }
 
-        private static int GetSteps(int[,] map, (int X, int Y) animal, (int X, int Y) startingPosition, (int, int) way1)
+        private static int GetSteps(int[,] map, (int X, int Y) animal, (int X, int Y) startingPosition, (int, int) initialNextPosition)
         {
             var prevPosition = startingPosition;
-            var nextPosition = way1;
+            var nextPosition = initialNextPosition;
 
             var stepps = 1;
             while (nextPosition != animal)
@@ -44,6 +53,28 @@ namespace aoc2023
             return stepps;
         }
 
+        private static int[,] GetSteppedMap(int[,] map, (int X, int Y) animal, (int X, int Y) startingPosition, (int, int) initialNextPosition)
+        {
+            int[,] steppedMap = new int[map.GetLength(0), map.GetLength(1)];
+
+            var prevPosition = startingPosition;
+            var nextPosition = initialNextPosition;
+
+            steppedMap[startingPosition.X, startingPosition.Y] = 1;
+            steppedMap[initialNextPosition.Item1, initialNextPosition.Item2] = 1;
+
+            while (nextPosition != animal)
+            {
+                var nextPipeType = map[nextPosition.Item1, nextPosition.Item2];
+                var aPos = GetNextPosition(prevPosition, nextPipeType, nextPosition);
+                prevPosition = nextPosition;
+                nextPosition = aPos;
+                steppedMap[nextPosition.Item1, nextPosition.Item2] = 1;
+            }
+
+            return steppedMap;
+        }
+
         private static int[,] GetMap(List<string> input)
         {
             var xSize = input.First().Length;
@@ -51,7 +82,7 @@ namespace aoc2023
 
             int[,] map = new int[xSize, ySize];
 
-            for (int y = 0; y < xSize; y++)
+            for (int y = 0; y < ySize; y++)
             {
                 for (int x = 0; x < xSize; x++)
                 {
