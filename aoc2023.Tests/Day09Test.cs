@@ -14,12 +14,14 @@ namespace aoc2023.Tests
         private const int day = 09;
         private List<string> input = null!;
         private List<string> exampleInput = null!;
+        private List<string> exampleInput2 = null!;
 
         [OneTimeSetUp]
         public void Setup()
         {
             input = ReadInputFile.GetInputDayPadding(09, "input.txt");
             exampleInput = ReadInputFile.GetInputDayPadding(09, "exampleInput.txt");
+            exampleInput2 = ReadInputFile.GetInputDayPadding(09, "exampleInput2.txt");
         }
 
         [Test]
@@ -40,14 +42,14 @@ namespace aoc2023.Tests
         public void ExamplePart2()
         {
             var answer = new Day09().Part2(exampleInput);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(new BigInteger(2), answer);
         }
 
         [Test]
         public void Part2()
         {
             var answer = new Day09().Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(new BigInteger(1041), answer);
         }
 
     }
