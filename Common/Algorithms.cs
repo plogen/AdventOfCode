@@ -19,5 +19,31 @@ namespace Common
         }
 
 
+
+
+
+        //https://stackoverflow.com/questions/13569810/least-common-multiple
+        //https://en.wikipedia.org/wiki/Euclidean_algorithm
+        static long GreatestCommonFactor(long a, long b)
+        {
+            while (b != 0)
+            {
+                long temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+        static long LeastCommonMultiple(long a, long b)
+        {
+            return (a / GreatestCommonFactor(a, b)) * b;
+        }
+        public static long AggregatedLeastCommonMultiple(long[] numbers)
+        {
+            return numbers.Aggregate((S, val) => LeastCommonMultiple(S, val));
+        }
+
+
+
     }
 }

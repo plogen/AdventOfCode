@@ -48,7 +48,7 @@ namespace aoc2023.Tests
         public void Part2()
         {
             var answer = new Day08().Part2(input);
-            Assert.AreEqual(-1, answer);
+            Assert.AreEqual(8245452805243, answer);
         }
 
     }
