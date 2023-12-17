@@ -55,6 +55,23 @@ namespace Common
         }
 
 
+        public static (int X, int Y) SearchArray(int search, int[,] array)
+        {
+            for (int x = 0; x < array.GetLength(0); x++)
+            {
+                for (int y = 0; y < array.GetLength(1); y++)
+                {
+                    if (array[x, y] == search)
+                    {
+                        return (X: x, Y: y);
+                    }
+                }
+            }
+            return (-1, -1);
+        }
+
+
+
 
         public static string GetSolutionDir()
         {
