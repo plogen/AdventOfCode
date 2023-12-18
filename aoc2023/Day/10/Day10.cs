@@ -1,5 +1,8 @@
 ﻿using Common;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Text.RegularExpressions;
 
 //Puzzle: https://adventofcode.com/2023/day/10
@@ -32,7 +35,56 @@ namespace aoc2023
             var way1 = (animalWays.Value.way1.Item1, animalWays.Value.way1.Item2);
             var way1stepps = GetSteppedMap(map, animal, startingPosition, way1);
 
-            return null;
+
+
+            GraphicsPath gp = new GraphicsPath();
+            gp.StartFigure();
+            gp.AddLines(way1stepps.Item2.ToArray());
+            gp.CloseFigure();
+
+
+            //Only used to get a nice drawing ;)
+            Bitmap bm = new Bitmap(map.GetLength(0) * 10, map.GetLength(1) * 10);
+            Graphics g = Graphics.FromImage(bm);
+            g.DrawPath(Pens.DarkRed, gp);
+
+
+            int tilesInsodeLoop = 0;
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                for (int x = 0; x < map.GetLength(0); x++)
+                {
+
+                    if (way1stepps.Item1[x, y] == 0)//Do not include actual pipes that is visited by the loop
+                    {
+                        bool isInPath = gp.IsVisible(new Point(x * 10, y * 10));
+                        if (isInPath)
+                        {
+                            if (map[x, y] == -1)
+                            {
+                                //Real dot
+                                g.FillRectangle(Brushes.Yellow, x * 10, y * 10, 4, 4);
+                            }
+                            else
+                            {
+                                //Junk pipes
+                                g.FillRectangle(Brushes.OrangeRed, x * 10, y * 10, 4, 4);
+                            }
+                            tilesInsodeLoop++;
+                        }
+                        else
+                        {
+                            //Outside loop
+                            g.FillRectangle(Brushes.Gray, x * 10, y * 10, 4, 4);
+                        }
+                    }
+                }
+            }
+
+            bm.Save("Day10Part2.bmp", ImageFormat.Bmp);
+            g.Dispose();
+
+            return tilesInsodeLoop;
         }
 
         private static int GetSteps(int[,] map, (int X, int Y) animal, (int X, int Y) startingPosition, (int, int) initialNextPosition)
@@ -53,9 +105,12 @@ namespace aoc2023
             return stepps;
         }
 
-        private static int[,] GetSteppedMap(int[,] map, (int X, int Y) animal, (int X, int Y) startingPosition, (int, int) initialNextPosition)
+        private static (int[,], List<Point>) GetSteppedMap(int[,] map, (int X, int Y) animal, (int X, int Y) startingPosition, (int, int) initialNextPosition)
         {
             int[,] steppedMap = new int[map.GetLength(0), map.GetLength(1)];
+            List<Point> points = new List<Point>();
+            points.Add(new Point(startingPosition.X * 10, startingPosition.Y * 10));
+
 
             var prevPosition = startingPosition;
             var nextPosition = initialNextPosition;
@@ -65,6 +120,8 @@ namespace aoc2023
 
             while (nextPosition != animal)
             {
+                points.Add(new Point(nextPosition.Item1 * 10, nextPosition.Item2 * 10));
+
                 var nextPipeType = map[nextPosition.Item1, nextPosition.Item2];
                 var aPos = GetNextPosition(prevPosition, nextPipeType, nextPosition);
                 prevPosition = nextPosition;
@@ -72,7 +129,7 @@ namespace aoc2023
                 steppedMap[nextPosition.Item1, nextPosition.Item2] = 1;
             }
 
-            return steppedMap;
+            return (steppedMap, points);
         }
 
         private static int[,] GetMap(List<string> input)
