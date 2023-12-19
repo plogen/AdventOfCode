@@ -28,7 +28,7 @@ namespace aoc2023
             List<int> emptyRows = GetEmtyRows(input, yCount);
             List<int> emptyCols = GetEmpyCols(input, xCount);
 
-            return GetTotalDistances(galaxies, 1, emptyRows, emptyCols);
+            return GetTotalDistances(galaxies, 999999, emptyRows, emptyCols);
         }
 
         private static List<Galaxy> GetGalaxies(List<string> input, int xCount, int yCount)
