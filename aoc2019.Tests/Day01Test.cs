@@ -35,21 +35,25 @@ public class Day01Test
     public void Part1()
     {
         var answer = new Day01().Part1(input);
-        Assert.That(answer, Is.EqualTo(-1));
+        Assert.That(answer, Is.EqualTo(3372695));
     }
 
     [Test]
-    public void ExamplePart2()
+    [TestCase(2, 14)]
+    [TestCase(966, 1969)]
+    [TestCase(50346, 100756)]
+
+    public void ExamplePart2(int expected, int input)
     {
-        var answer = new Day01().Part2(exampleInput);
-        Assert.That(-1, Is.EqualTo(answer));
+        var answer = new Day01().Part2(new List<string> { input.ToString() });
+        Assert.That(answer, Is.EqualTo(expected));
     }
 
     [Test]
     public void Part2()
     {
         var answer = new Day01().Part2(input);
-        Assert.That(-1, Is.EqualTo(answer));
+        Assert.That(answer, Is.EqualTo(5056172));
     }
 
 }
