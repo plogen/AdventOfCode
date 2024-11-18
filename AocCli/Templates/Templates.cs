@@ -118,28 +118,28 @@ public class Day" + day + @"Test
     public void ExamplePart1()
     {
         var answer = new Day" + day + @"().Part1(exampleInput);
-        Assert.AreEqual(-1, answer);
+        Assert.That(-1, Is.EqualTo(answer));
     }
 
     [Test]
     public void Part1()
     {
         var answer = new Day" + day + @"().Part1(input);
-        Assert.AreEqual(-1, answer);
+        Assert.That(-1, Is.EqualTo(answer));
     }
 
     [Test]
     public void ExamplePart2()
     {
         var answer = new Day" + day + @"().Part2(exampleInput);
-        Assert.AreEqual(-1, answer);
+        Assert.That(-1, Is.EqualTo(answer));
     }
 
     [Test]
     public void Part2()
     {
         var answer = new Day" + day + @"().Part2(input);
-        Assert.AreEqual(-1, answer);
+        Assert.That(-1, Is.EqualTo(answer));
     }
 
 }
