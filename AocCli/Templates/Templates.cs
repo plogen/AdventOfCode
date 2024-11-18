@@ -66,25 +66,25 @@ namespace AocCli.Templates
         }
 
 
+
+
         public  static string ClassTemplate(string nameSpace, string @class, int year, string day)
         {
             return
 @"﻿using Common;
 
 //Puzzle:" + $" https://adventofcode.com/{year}/day/{day}" + @"
-namespace " + nameSpace + @"
+namespace " + nameSpace + ";" + @"
+public class " + @class + @": DayPuzzle
 {
-    public class " + @class + @": DayPuzzle
+    public override object Part1(List<string> input)
     {
-        public override object Part1(List<string> input)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
+    }
 
-        public override object Part2(List<string> input)
-        {
-            throw new NotImplementedException();
-        }
+    public override object Part2(List<string> input)
+    {
+        throw new NotImplementedException();
     }
 }";
         }
@@ -99,52 +99,50 @@ using System.Collections.Generic;
 using System.Linq;
 using aoc" + year + @";
 
-namespace " + @namespace + @"
+namespace " + @namespace + ";" + @"
+
+[TestFixture]
+public class Day" + day + @"Test
 {
+    private const int day = " + day + @";
+    private List<string> input = null!;
+    private List<string> exampleInput = null!;
 
-    [TestFixture]
-    public class Day" + day + @"Test
+    [OneTimeSetUp]
+    public void Setup()
     {
-        private const int day = " + day + @";
-        private List<string> input = null!;
-        private List<string> exampleInput = null!;
-
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            input = ReadInputFile.GetInputDayPadding(" + day + @", ""input.txt"");
-            exampleInput = ReadInputFile.GetInputDayPadding(" + day + @", ""exampleInput.txt"");
-        }
-
-        [Test]
-        public void ExamplePart1()
-        {
-            var answer = new Day" + day + @"().Part1(exampleInput);
-            Assert.AreEqual(-1, answer);
-        }
-
-        [Test]
-        public void Part1()
-        {
-            var answer = new Day" + day + @"().Part1(input);
-            Assert.AreEqual(-1, answer);
-        }
-
-        [Test]
-        public void ExamplePart2()
-        {
-            var answer = new Day" + day + @"().Part2(exampleInput);
-            Assert.AreEqual(-1, answer);
-        }
-
-        [Test]
-        public void Part2()
-        {
-            var answer = new Day" + day + @"().Part2(input);
-            Assert.AreEqual(-1, answer);
-        }
-
+        input = ReadInputFile.GetInputDayPadding(" + day + @", ""input.txt"");
+        exampleInput = ReadInputFile.GetInputDayPadding(" + day + @", ""exampleInput.txt"");
     }
+
+    [Test]
+    public void ExamplePart1()
+    {
+        var answer = new Day" + day + @"().Part1(exampleInput);
+        Assert.AreEqual(-1, answer);
+    }
+
+    [Test]
+    public void Part1()
+    {
+        var answer = new Day" + day + @"().Part1(input);
+        Assert.AreEqual(-1, answer);
+    }
+
+    [Test]
+    public void ExamplePart2()
+    {
+        var answer = new Day" + day + @"().Part2(exampleInput);
+        Assert.AreEqual(-1, answer);
+    }
+
+    [Test]
+    public void Part2()
+    {
+        var answer = new Day" + day + @"().Part2(input);
+        Assert.AreEqual(-1, answer);
+    }
+
 }
 ";
         }
