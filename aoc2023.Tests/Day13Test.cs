@@ -31,7 +31,7 @@ namespace aoc2023.Tests
         [Test]
         public void Part1()
         {
-            var answer = new Day13().Part1(input);
+            var answer = new Day13().Part1(input); // to low 26606, to low 35706, 19157 to low
             Assert.AreEqual(-1, answer);
         }
 
