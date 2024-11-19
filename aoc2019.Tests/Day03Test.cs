@@ -31,7 +31,7 @@ public class Day03Test
     public void Part1()
     {
         var answer = new Day03().Part1(input);
-        Assert.That(answer, Is.EqualTo(-1));
+        Assert.That(answer, Is.EqualTo(225));
     }
 
     [Test]
