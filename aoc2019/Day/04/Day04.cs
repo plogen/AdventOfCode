@@ -23,6 +23,25 @@ public class Day04: DayPuzzle
         return passwordCount;
     }
 
+    public override object Part2(List<string> input)
+    {
+        var range = input[0].Split('-').Select(Int32.Parse);
+
+        var size = range.Last() - range.First();
+
+        int passwordCount = 0;
+        var value = range.First();
+        for (int i = 0; i < size; i++)
+        {
+            if (Increasing(value) && HasDoubleThatIsNotPartOfLargeGroup(value))
+                passwordCount++;
+
+            value++;
+        }
+
+        return passwordCount;
+    }
+
     private bool Increasing(int value)
     {
         var array = GetIntArray(value);
@@ -49,10 +68,27 @@ public class Day04: DayPuzzle
         return false;
     }
 
-    public override object Part2(List<string> input)
+    private bool HasDoubleThatIsNotPartOfLargeGroup(int value)
     {
-        throw new NotImplementedException();
+        var array = GetIntArray(value);
+        List<int> potentialDouble = new();
+        for (int i = 0; i < array.Length - 1; i++)
+        {
+            if (array[i] == array[i + 1])
+            {
+                if(i > 0 && array[i-1] == array[i])
+                    continue;
+                if (i < array.Length -2 && array[i + 2] == array[i])
+                    continue;
+
+                return true;
+            }
+        }
+
+        return false;
     }
+
+
 
 
     int[] GetIntArray(int num)
