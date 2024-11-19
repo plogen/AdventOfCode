@@ -17,7 +17,19 @@ public class Day03: DayPuzzle
 
     public override object Part2(List<string> input)
     {
-        throw new NotImplementedException();
+        var wire1 = GetWireStepps(input[0]);
+        var wireDiagram1 = GetWireDiagram(wire1);
+        var wire2 = GetWireStepps(input[1]);
+        var wireDiagram2 = GetWireDiagram(wire2);
+
+        List<WireDiagramPoint> existInBoth = wireDiagram1.Intersect(wireDiagram2).ToList();
+
+        var lowestStepps = existInBoth.Select(x =>
+                wireDiagram1.FindIndex(w1 => w1 == x)
+                +
+                wireDiagram2.FindIndex(w2 => w2 == x)).Min();
+
+        return lowestStepps + 2;
     }
 
     private List<WireStep> GetWireStepps(string input)
