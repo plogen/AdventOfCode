@@ -21,13 +21,6 @@ public class Day02Test
     }
 
     [Test]
-    public void ExamplePart1()
-    {
-        var answer = new Day02().Part1(exampleInput);
-        Assert.That(answer, Is.EqualTo(-1));
-    }
-
-    [Test]
     public void Part1()
     {
         var answer = new Day02().Part1(input);
@@ -35,17 +28,10 @@ public class Day02Test
     }
 
     [Test]
-    public void ExamplePart2()
-    {
-        var answer = new Day02().Part2(exampleInput);
-        Assert.That(answer, Is.EqualTo(-1));
-    }
-
-    [Test]
     public void Part2()
     {
         var answer = new Day02().Part2(input);
-        Assert.That(answer, Is.EqualTo(-1));
+        Assert.That(answer, Is.EqualTo(7733));
     }
 
 }
