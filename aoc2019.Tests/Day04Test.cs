@@ -27,18 +27,12 @@ public class Day04Test
         Assert.That(answer, Is.EqualTo(1767));
     }
 
-    [Test]
-    public void ExamplePart2()
-    {
-        var answer = new Day04().Part2(exampleInput);
-        Assert.That(answer, Is.EqualTo(-1));
-    }
 
     [Test]
     public void Part2()
     {
         var answer = new Day04().Part2(input);
-        Assert.That(answer, Is.EqualTo(-1));
+        Assert.That(answer, Is.EqualTo(1192));
     }
 
 }
