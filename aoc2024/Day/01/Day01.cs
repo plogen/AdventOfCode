@@ -15,7 +15,9 @@ public class Day01: DayPuzzle
 
     public override object Part2(List<string> input)
     {
-        throw new NotImplementedException();
+        var list = GetList(input);
+        var similarityScore = GetSimilarityScore(list);
+        return similarityScore;
     }
 
 
@@ -45,6 +47,19 @@ public class Day01: DayPuzzle
 
         return totalDistance;
     }
+
+    private long GetSimilarityScore(ListInput listInput)
+    {
+        long similarityScore = 0;
+
+        foreach (var left in listInput.left)
+        {
+            similarityScore += left * listInput.right.Count(x => x == left);
+        }
+
+        return similarityScore;
+    }
+
 
     record ListInput(List<int> left, List<int> right);
 
