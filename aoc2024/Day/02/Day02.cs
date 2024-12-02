@@ -7,18 +7,32 @@ public class Day02: DayPuzzle
     public override object Part1(List<string> input)
     {
         var reports = GetReports(input);
-
-        foreach (var report in reports)
-        {
-            var isSafe = IsSafe(report);
-        }
-
         return reports.Where(r => IsSafe(r)).Count();
     }
 
     public override object Part2(List<string> input)
     {
-        throw new NotImplementedException();
+        var reports = GetReports(input);
+
+        int safeReports = 0;
+        foreach (var report in reports)
+        {
+            var isSafe = IsSafe(report);
+            if(isSafe)
+            {
+                safeReports++;
+            }
+            else
+            {
+                var permutations = Algorithms.GetPermutationsByRemovingEachposition(report);
+                if (permutations.Any(p => IsSafe(p)))
+                {
+                    safeReports++;
+                }
+            }
+        }
+
+        return safeReports;
     }
 
     private List<int[]> GetReports(List<string> input)
@@ -43,5 +57,60 @@ public class Day02: DayPuzzle
 
         return true;
     }
+
+    private bool IsSafe(int[] report, int allowFaults)
+    {
+        if (!IsAllIncreasing(report) && !IsAllDecreasing(report))
+            return false;
+
+        if (!IsWithinSteps(report, 3))
+            return false;
+
+        return true;
+    }
+
+
+    private bool IsAllIncreasing(int[] numbers)
+    {
+        for (int i = 0; i < numbers.Length - 1; i++)
+        {
+            if (numbers[i] >= numbers[i + 1])
+            {
+                if(i + 2 < numbers.Length && numbers[i] >= numbers[i + 2])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+
+    private bool IsAllDecreasing(int[] numbers)
+    {
+        for (int i = 0; i < numbers.Length - 1; i++)
+        {
+            if (numbers[i] <= numbers[i + 1])
+            {
+                if (i + 2 < numbers.Length && numbers[i] <= numbers[i + 2])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+
+    private bool IsWithinSteps(int[] numbers, int allowedStepSize)
+    {
+        for (int i = 0; i < numbers.Length - 1; i++)
+        {
+            if (Math.Abs(numbers[i] - numbers[i + 1]) > allowedStepSize)
+            {
+                if (i + 2 < numbers.Length && Math.Abs(numbers[i] - numbers[i + 2]) > allowedStepSize)
+                    return false;
+            }                
+        }
+        return true;
+    }
+
+
 
 }
