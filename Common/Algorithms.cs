@@ -19,6 +19,19 @@ namespace Common
         }
 
 
+        public static IEnumerable<int[]> GetPermutationsByRemovingEachposition(int[] list)
+        {
+            List<int[]> permutations = new List<int[]>();
+            for (int i = 0; i <= list.Length; i++)
+            {
+                IEnumerable<int> before = list.Take(i-1);
+                IEnumerable<int> after = list.Skip(i);
+                permutations.Add(Enumerable.Concat(before, after).ToArray());
+            }
+            return permutations;
+        }
+
+
 
 
 
