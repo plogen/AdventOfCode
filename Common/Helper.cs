@@ -34,6 +34,21 @@ namespace Common
             return true;
         }
 
+        public static bool IsAllIncreasing(this int[] numbers, int allowedFaults)
+        {
+            int faults = 0;
+            for (int i = 0; i < numbers.Length - 1; i++)
+            {
+                if (numbers[i] >= numbers[i + 1])
+                    faults++;
+
+                if(faults > allowedFaults)
+                    return false;
+            }
+            return true;
+        }
+
+
         public static bool IsAllDecreasing(this int[] numbers)
         {
             for (int i = 0; i < numbers.Length - 1; i++)
@@ -44,11 +59,40 @@ namespace Common
             return true;
         }
 
+        public static bool IsAllDecreasing(this int[] numbers, int allowedFaults)
+        {
+            int faults = 0;
+            for (int i = 0; i < numbers.Length - 1; i++)
+            {
+                if (numbers[i] <= numbers[i + 1])
+                    faults++;
+
+                if (faults > allowedFaults)
+                    return false;
+            }
+            return true;
+        }
+
+
         public static bool IsWithinSteps(this int[] numbers, int allowedStepSize)
         {
             for (int i = 0; i < numbers.Length - 1; i++)
             {
                 if (Math.Abs(numbers[i] - numbers[i + 1]) > allowedStepSize)
+                    return false;
+            }
+            return true;
+        }
+
+        public static bool IsWithinSteps(this int[] numbers, int allowedStepSize, int allowedFaults)
+        {
+            int faults = 0;
+            for (int i = 0; i < numbers.Length - 1; i++)
+            {
+                if (Math.Abs(numbers[i] - numbers[i + 1]) > allowedStepSize)
+                    faults++;
+
+                if (faults > allowedFaults)
                     return false;
             }
             return true;
