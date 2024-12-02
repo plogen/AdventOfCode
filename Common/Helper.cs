@@ -23,6 +23,39 @@ namespace Common
             return number == 0;
         }
 
+
+        public static bool IsAllIncreasing(this int[] numbers)
+        {
+            for (int i = 0; i < numbers.Length - 1; i++)
+            {
+                if (numbers[i] >= numbers[i + 1])
+                    return false;
+            }
+            return true;
+        }
+
+        public static bool IsAllDecreasing(this int[] numbers)
+        {
+            for (int i = 0; i < numbers.Length - 1; i++)
+            {
+                if (numbers[i] <= numbers[i + 1])
+                    return false;
+            }
+            return true;
+        }
+
+        public static bool IsWithinSteps(this int[] numbers, int allowedStepSize)
+        {
+            for (int i = 0; i < numbers.Length - 1; i++)
+            {
+                if (Math.Abs(numbers[i] - numbers[i + 1]) > allowedStepSize)
+                    return false;
+            }
+            return true;
+        }
+
+
+
         public static readonly Dictionary<char, Func<long, long, long>> Operators = new ()
         {
             {'+', (x,y) => x+y},
