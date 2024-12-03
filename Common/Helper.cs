@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Common
@@ -129,6 +130,12 @@ namespace Common
                 return result;
             }
             return NumbersAsText[input];
+        }
+
+        public static string RemoveBetween(string sourceString, string startTag, string endTag)
+        {
+            Regex regex = new Regex(string.Format("{0}(.*?){1}", Regex.Escape(startTag), Regex.Escape(endTag)));
+            return regex.Replace(sourceString, String.Empty);
         }
 
 

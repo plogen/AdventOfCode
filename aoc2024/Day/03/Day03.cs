@@ -8,13 +8,25 @@ public class Day03: DayPuzzle
     public override object Part1(List<string> input)
     {
         var numbers = GetNumbers(input);
-
         return GetResult(numbers);
     }
 
     public override object Part2(List<string> input)
     {
-        throw new NotImplementedException();
+        for (var i = 0; i < input.Count; i++)
+        {
+            var lastDont = input[i].LastIndexOf("don't()");
+            var lastDo = input[i].LastIndexOf("do()");
+            if (lastDont > lastDo)
+            {
+                input[i] = input[i].Substring(0, lastDont + 7);
+            }
+        }
+
+        var removed = input.Select(x => Helper.RemoveBetween(x, "don't()", "do()")).ToList();
+
+        var numbers = GetNumbers(removed);
+        return GetResult(numbers);
     }
 
 

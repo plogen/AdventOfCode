@@ -37,14 +37,14 @@ public class Day03Test
     [Test]
     public void ExamplePart2()
     {
-        var answer = new Day03().Part2(exampleInput);
-        Assert.That(answer, Is.EqualTo(-1));
+        var answer = new Day03().Part2(new List<string> { "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"});
+        Assert.That(answer, Is.EqualTo(48));
     }
 
     [Test]
     public void Part2()
     {
-        var answer = new Day03().Part2(input);
+        var answer = new Day03().Part2(input); // 104202484, 103645239 to high..... 74984689 to low
         Assert.That(answer, Is.EqualTo(-1));
     }
 
