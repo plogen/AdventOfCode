@@ -13,16 +13,20 @@ namespace Common
             if (!NorthValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x, y - 1]}{(char)map[x, y - 2]}{(char)map[x, y - 3]}";
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x, y - i];
+            }
 
-            if (s == word)
+            if (data == word)
                 return true;
 
             return false;
         }
         public static bool NorthValid(int[,] map, int x, int y, string word)
         {
-            if (y < 3)
+            if (y < word.Length - 1)
                 return false;
 
             return true;
@@ -37,9 +41,13 @@ namespace Common
             if (!SouthValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x, y + 1]}{(char)map[x, y + 2]}{(char)map[x, y + 3]}";
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x, y + i];
+            }
 
-            if (s == word)
+            if (data == word)
                 return true;
 
             return false;
@@ -63,9 +71,13 @@ namespace Common
             if (!EastValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x + 1, y]}{(char)map[x + 2, y]}{(char)map[x + 3, y]}";
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x + i, y];
+            }
 
-            if (s == word)
+            if (data == word)
                 return true;
 
             return false;
@@ -89,9 +101,13 @@ namespace Common
             if (!WestValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x - 1, y]}{(char)map[x - 2, y]}{(char)map[x - 3, y]}";
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x - i, y];
+            }
 
-            if (s == word)
+            if (data == word)
                 return true;
 
             return false;
@@ -116,9 +132,14 @@ namespace Common
             if (!Map.EastValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x + 1, y + 1]}{(char)map[x + 2, y + 2]}{(char)map[x + 3, y + 3]}";
 
-            if (s == word)
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x + i, y + i];
+            }
+
+            if (data == word)
                 return true;
 
             return false;
@@ -132,9 +153,14 @@ namespace Common
             if (!EastValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x + 1, y - 1]}{(char)map[x + 2, y - 2]}{(char)map[x + 3, y - 3]}";
 
-            if (s == word)
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x + i, y - i];
+            }
+
+            if (data == word)
                 return true;
 
             return false;
@@ -149,9 +175,13 @@ namespace Common
             if (!WestValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x - 1, y - 1]}{(char)map[x - 2, y - 2]}{(char)map[x - 3, y - 3]}";
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x - i, y - i];
+            }
 
-            if (s == word)
+            if (data == word)
                 return true;
 
             return false;
@@ -165,9 +195,13 @@ namespace Common
             if (!WestValid(map, x, y, word))
                 return false;
 
-            var s = $"{(char)map[x, y]}{(char)map[x - 1, y + 1]}{(char)map[x - 2, y + 2]}{(char)map[x - 3, y + 3]}";
+            string data = "";
+            for (int i = 0; i < word.Length; i++)
+            {
+                data += (char)map[x - i, y + i];
+            }
 
-            if (s == word)
+            if (data == word)
                 return true;
 
             return false;
