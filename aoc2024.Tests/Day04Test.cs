@@ -38,14 +38,14 @@ public class Day04Test
     public void ExamplePart2()
     {
         var answer = new Day04().Part2(exampleInput);
-        Assert.That(answer, Is.EqualTo(-1));
+        Assert.That(answer, Is.EqualTo(9));
     }
 
     [Test]
     public void Part2()
     {
         var answer = new Day04().Part2(input);
-        Assert.That(answer, Is.EqualTo(-1));
+        Assert.That(answer, Is.EqualTo(1990));
     }
 
 }

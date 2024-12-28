@@ -5,6 +5,7 @@ namespace aoc2024;
 public class Day04 : DayPuzzle
 {
     private const string xmas = "XMAS";
+
     public override object Part1(List<string> input)
     {
         var map = GetMap(input);
@@ -16,7 +17,56 @@ public class Day04 : DayPuzzle
 
     public override object Part2(List<string> input)
     {
-        throw new NotImplementedException();
+        var map = GetMap(input);
+
+        var count = CountStarMasFromMap(map);
+
+        return count;
+    }
+
+
+    private int CountStarMasFromMap(int[,] map)
+    {
+        int count = 0;
+        int masCount = 0;
+
+        var xSize = map.GetLength(0);
+        var ySize = map.GetLength(1);
+        char A = 'A';
+
+        for (int y = 0; y < ySize; y++)
+        {
+            for (int x = 0; x < xSize; x++)
+            {
+                if (map[x, y] == A)
+                {
+                    masCount = 0;
+
+                    if (Map.NorthWest(map, x, y, "AM") &&
+                        Map.SouthEast(map, x, y, "AS")
+                        ||
+                        Map.NorthWest(map, x, y, "AS") &&
+                        Map.SouthEast(map, x, y, "AM")
+                        )
+                    { masCount++; }
+
+
+                    if (Map.NorthEast(map, x, y, "AM") &&
+                        Map.SouthWest(map, x, y, "AS")
+                        ||
+                        Map.NorthEast(map, x, y, "AS") &&
+                        Map.SouthWest(map, x, y, "AM")
+                        )
+                    { masCount++; }
+
+
+                    if (masCount == 2)
+                        count++;
+                }
+            }
+        }
+
+        return count;
     }
 
 
